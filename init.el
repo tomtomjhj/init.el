@@ -2,6 +2,16 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+; requires
+(require 'cl) ; lexcial-let
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (add-to-list 'package-archives
+               (cons "melpa" (concat proto "://melpa.org/packages/")) t))
+(package-initialize)
+
 ; zenburn
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn")
 (setq zenburn-override-colors-alist
@@ -26,7 +36,6 @@
 (require 'evil)
 (evil-mode 1)
 (modify-syntax-entry ?_ "w") ; `_` isn't word char in emacs
-(require 'cl) ; lexcial-let
 (lexical-let*
   ((default (face-attribute 'default :height))
    (size default))
@@ -51,7 +60,6 @@
 (define-key evil-motion-state-map (kbd "C--") 'global-scale-down)
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
 
-; - undo-tree
 ; - PG
 ; - tabbar-mode
 ; - things from .spacemacs
