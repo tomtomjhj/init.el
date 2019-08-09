@@ -30,29 +30,26 @@
 (load-theme 'zenburn)
 
 
-
 ; evil.
+; https://www.emacswiki.org/emacs/Evil#toc6
 (add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
 (evil-mode 1)
 (modify-syntax-entry ?_ "w") ; `_` isn't word char in emacs
+(evil-select-search-module 'evil-search-module 'evil-search)
 (lexical-let*
   ((default (face-attribute 'default :height))
    (size default))
-
   (defun global-scale-default ()
     (interactive)
     (setq size default)
     (global-scale-internal size))
-
   (defun global-scale-up ()
     (interactive)
     (global-scale-internal (incf size 10)))
-
   (defun global-scale-down ()
     (interactive)
     (global-scale-internal (decf size 10)))
-
   (defun global-scale-internal (arg)
     (set-face-attribute 'default (selected-frame) :height arg)))
 (define-key evil-motion-state-map (kbd "C-=") 'global-scale-up)
@@ -61,6 +58,8 @@
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
 
 ; - PG
+(add-hook 'coq-mode-hook #'company-coq-mode)
+
 ; - tabbar-mode
 ; - things from .spacemacs
 ;   - undo-tree mapping of coq
