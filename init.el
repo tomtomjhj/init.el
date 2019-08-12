@@ -57,6 +57,11 @@
 (define-key evil-motion-state-map (kbd "C--") 'global-scale-down)
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
 
+; https://doingmyprogramming.wordpress.com/2015/12/17/getting-started-with-coq-and-proof-general/
+; https://www.williamjbowman.com/blog/2012/07/26/using-evil-for-good/
+; https://stackoverflow.com/questions/8483182/evil-mode-best-practice
+; https://github.com/ProofGeneral/PG/issues/430
+
 ; - PG
 (add-hook 'coq-mode-hook #'company-coq-mode)
 
