@@ -4,3 +4,6 @@
 [submodule "zenburn"]
 	path = zenburn
 	url = https://github.com/bbatsov/zenburn-emacs
+[submodule "evil-surround"]
+	path = evil-surround
+	url = https://github.com/emacs-evil/evil-surround
