@@ -30,15 +30,12 @@
           ))
 (load-theme 'zenburn)
 
-; TODO: persistent undo, which doesn't seem to work
-; (setq undo-tree-auto-save-history t)
-; (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
 
 ; why is this option even a thing????????
+(setq evil-want-fine-undo t)
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 
@@ -67,6 +64,19 @@
 (define-key evil-motion-state-map (kbd "C-+") 'global-scale-up)
 (define-key evil-motion-state-map (kbd "C--") 'global-scale-down)
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
+(define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
+(define-key evil-motion-state-map (kbd "j") 'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "k") 'evil-previous-visual-line)
+(define-key evil-motion-state-map (kbd "J") 'evil-next-line)
+(define-key evil-motion-state-map (kbd "K") 'evil-previous-line)
+(define-key evil-motion-state-map (kbd "L") 'evil-forward-char)
+(define-key evil-motion-state-map (kbd "H") 'evil-backward-char)
+; (define-key evil-motion-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
+(define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
+(define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
+
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
 (require 'evil-surround)
@@ -87,6 +97,23 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; undo
+(setq undo-tree-auto-save-history t)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+; Why do I need to load this path again???
+; No errors without this load-path, but won't work
+(add-to-list 'load-path "~/.emacs.d/evil/lib")
+(require 'undo-tree)
+(global-undo-tree-mode)
+(define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
+(define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
+; TODO: persistent undo, which doesn't seem to work
+
+; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
+; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
+; what does undo-tree.el do in evil???
+
 ; https://doingmyprogramming.wordpress.com/2015/12/17/getting-started-with-coq-and-proof-general/
 ; https://www.williamjbowman.com/blog/2012/07/26/using-evil-for-good/
 ; https://stackoverflow.com/questions/8483182/evil-mode-best-practice
@@ -94,21 +121,12 @@
 
 ; - PG
 (add-hook 'coq-mode-hook #'company-coq-mode)
-; (add-hook 'coq-mode-hook 'undo-tree-mode)
-; (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
-; (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
-; (evil-define-key 'normal coq-mode-map
-;  (kbd "u") 'undo-tree-undo
-;  (kbd "C-r") 'undo-tree-redo)
 ; TODO: PG keymaps
 ; TODO: unicode conversion/input
 
 ; - tabbar-mode
 ; - things from .spacemacs
-;   - undo-tree mapping of coq ----> plain evil undo is _broken_ too.
 
-; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
-; TODO: what does undo-tree.el do in evil/???
 
 ; TODO: Remove gui buttons
 ; TODO: something similar to NerdTree, CtrlP, git gutter, MRU
