@@ -12,6 +12,7 @@
                (cons "melpa" (concat proto "://melpa.org/packages/")) t))
 (package-initialize)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; zenburn
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn")
 ; TODO: search highlight color, more contrast
@@ -30,7 +31,7 @@
           ))
 (load-theme 'zenburn)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
 
@@ -66,16 +67,22 @@
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
 (define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
-(define-key evil-motion-state-map (kbd "j") 'evil-next-visual-line)
-(define-key evil-motion-state-map (kbd "k") 'evil-previous-visual-line)
-(define-key evil-motion-state-map (kbd "J") 'evil-next-line)
-(define-key evil-motion-state-map (kbd "K") 'evil-previous-line)
-(define-key evil-motion-state-map (kbd "L") 'evil-forward-char)
-(define-key evil-motion-state-map (kbd "H") 'evil-backward-char)
-; (define-key evil-motion-state-map (kbd "C-h") 'evil-window-left)
+(define-key evil-motion-state-map (kbd "j") 'evil-next-line)
+(define-key evil-motion-state-map (kbd "k") 'evil-previous-line)
+(define-key evil-normal-state-map (kbd "J") 'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "K") 'evil-previous-visual-line)
+(define-key evil-normal-state-map (kbd "L") 'evil-forward-char)
+(define-key evil-normal-state-map (kbd "H") 'evil-backward-char)
+(define-key evil-motion-state-map (kbd "C-h") 'evil-window-left)
 (define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
+
+; replace C-h with C-H
+(define-key global-map (kbd "C-S-H") 'help-command)
+
+; TODO: my <leader> commands
+(define-key evil-normal-state-map (kbd ", j") 'evil-join)
 
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
@@ -97,7 +104,7 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; undo
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
@@ -108,28 +115,56 @@
 (global-undo-tree-mode)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
-; TODO: persistent undo, which doesn't seem to work
 
 ; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
 ; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
 ; what does undo-tree.el do in evil???
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; - PG
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(evil-define-key 'normal coq-mode-map
+  (kbd "M-l") 'proof-goto-point
+  (kbd "M-k") 'proof-undo-last-successful-command
+  (kbd "M-j") 'proof-assert-next-command-interactive)
+(evil-define-key 'insert coq-mode-map
+  (kbd "M-l") 'proof-goto-point
+  (kbd "M-k") 'proof-undo-last-successful-command
+  (kbd "M-j") 'proof-assert-next-command-interactive)
+; use M-c as leader for coq commands
+(evil-define-key 'normal coq-mode-map
+  (kbd "M-c h") 'company-coq-doc
+  (kbd "M-c l c") 'coq-LocateConstant
+  (kbd "M-c l l") 'proof-layout-windows
+  (kbd "M-c l p") 'proof-prf
+  (kbd "M-c x") 'proof-shell-exit
+  (kbd "M-c s") 'proof-find-theorems
+  (kbd "M-c ?") 'coq-Check
+  (kbd "M-c p") 'coq-Print
+  (kbd "M-c ;") 'pg-insert-last-output-as-comment
+  (kbd "M-c o") 'company-coq-occur)
+  (setq-default proof-three-window-mode-policy 'hybrid)
+;; no splash screen
+(setq proof-splash-seen t)
+; TODO: color theme
+(custom-set-faces
+  '(proof-eager-annotation-face ((t (:background "medium blue"))))
+  '(proof-error-face ((t (:background "dark red"))))
+  '(proof-warning-face ((t (:background "indianred3")))))
+
+; TODO: line numbers
+; TODO: unicode conversion/input
+; TODO: Remove gui buttons
+; TODO: use mouse to adjust window size, split line style
+; TODO: tabbar
+; TODO: neotree, CtrlP, git gutter, MRU
+; TODO: evil nerdcommenter, visualstar
+; TODO: fix normal star
+; TODO: completion
+; TODO: '#file', 'file~', ....
+; https://stackoverflow.com/questions/12031830/what-are-file-and-file-and-how-can-i-get-rid-of-them
+
 ; https://doingmyprogramming.wordpress.com/2015/12/17/getting-started-with-coq-and-proof-general/
 ; https://www.williamjbowman.com/blog/2012/07/26/using-evil-for-good/
 ; https://stackoverflow.com/questions/8483182/evil-mode-best-practice
 ; https://github.com/ProofGeneral/PG/issues/430
-
-; - PG
-(add-hook 'coq-mode-hook #'company-coq-mode)
-; TODO: PG keymaps
-; TODO: unicode conversion/input
-
-; - tabbar-mode
-; - things from .spacemacs
-
-
-; TODO: Remove gui buttons
-; TODO: something similar to NerdTree, CtrlP, git gutter, MRU
-; TODO: evil Commentary
-; TODO: completion
-; TODO: my <leader> commands
