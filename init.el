@@ -35,12 +35,12 @@
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
 
-; why is this option even a thing????????
-(setq evil-want-fine-undo t)
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
+(setq evil-want-fine-undo t)
+(setq evil-cross-lines t)
 
 (add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
@@ -48,6 +48,7 @@
 
 (modify-syntax-entry ?_ "w") ; `_` isn't word char in emacs
 (evil-select-search-module 'evil-search-module 'evil-search)
+
 (lexical-let*
   ((default (face-attribute 'default :height))
    (size default))
@@ -63,10 +64,17 @@
     (global-scale-internal (decf size 10)))
   (defun global-scale-internal (arg)
     (set-face-attribute 'default (selected-frame) :height arg)))
+(defun silence () (interactive))
 (define-key evil-motion-state-map (kbd "C-=") 'global-scale-up)
 (define-key evil-motion-state-map (kbd "C-+") 'global-scale-up)
 (define-key evil-motion-state-map (kbd "C--") 'global-scale-down)
 (define-key evil-motion-state-map (kbd "C-0") 'global-scale-default)
+(define-key evil-motion-state-map [mouse-6] 'silence)
+(define-key evil-motion-state-map [double-mouse-6] 'silence)
+(define-key evil-motion-state-map [triple-mouse-6] 'silence)
+(define-key evil-motion-state-map [mouse-7] 'silence)
+(define-key evil-motion-state-map [double-mouse-7] 'silence)
+(define-key evil-motion-state-map [triple-mouse-7] 'silence)
 (define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
 (define-key evil-motion-state-map (kbd "j") 'evil-next-line)
@@ -79,6 +87,8 @@
 (define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
+(define-key evil-motion-state-map (kbd "<SPC>") 'evil-scroll-down)
+(define-key evil-motion-state-map (kbd "C-<SPC>") 'evil-scroll-up)
 
 ; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
@@ -95,6 +105,8 @@
   "k" 'kill-buffer
   "J" 'evil-join
   "<RET>" 'evil-ex-nohighlight
+  "q" 'evil-quit
+  "w" 'evil-write
   )
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
@@ -194,11 +206,15 @@
 (require 'neotree)
 (evil-collection-init 'neotree)
 (global-set-key [f8] 'neotree-toggle)
-(define-key evil-normal-state-map (kbd ", n n") 'neotree-toggle)
+(evil-leader/set-key
+  "n n" 'neotree-toggle)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (global-linum-mode 1)
+(setq mouse-wheel-scroll-amount '(3))
+(setq mouse-wheel-progressive-speed nil)
+(setq ring-bell-function 'ignore)
 
 ; TODO: unicode input
 ; TODO: use mouse to adjust window size, split line style
