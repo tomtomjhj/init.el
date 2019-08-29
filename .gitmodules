@@ -19,3 +19,6 @@
 [submodule "evil-nerd-commenter"]
 	path = evil-nerd-commenter
 	url = https://github.com/redguardtoo/evil-nerd-commenter
+[submodule "evil-visualstar"]
+	path = evil-visualstar
+	url = https://github.com/bling/evil-visualstar

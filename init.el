@@ -93,7 +93,9 @@
   "e" 'find-file
   "b" 'switch-to-buffer
   "k" 'kill-buffer
-  "J" 'evil-join)
+  "J" 'evil-join
+  "<RET>" 'evil-ex-nohighlight
+  )
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
 (require 'evil-surround)
@@ -121,6 +123,11 @@
   "c <SPC>" 'evilnc-comment-or-uncomment-lines
   "c c" 'evilnc-copy-and-comment-lines
 )
+
+(add-to-list 'load-path "~/.emacs.d/evil-visualstar")
+(require 'evil-visualstar)
+(global-evil-visualstar-mode)
+
 
 (add-to-list 'load-path "~/.emacs.d/evil-collection")
 (require 'evil-collection)
@@ -194,11 +201,9 @@
 (global-linum-mode 1)
 
 ; TODO: unicode input
-; TODO: Remove gui buttons
 ; TODO: use mouse to adjust window size, split line style
 ; TODO: tabbar
 ; TODO: CtrlP, git gutter, MRU
-; TODO: evil nerdcommenter, visualstar
 ; TODO: fix normal star
 ; TODO: completion
 ; TODO: '#file', 'file~', ....
