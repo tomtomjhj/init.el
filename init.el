@@ -13,7 +13,7 @@
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; zenburn
+; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn")
 ; TODO: search highlight color, more contrast
 (setq zenburn-override-colors-alist
@@ -30,6 +30,9 @@
           ))
 (load-theme 'zenburn)
 
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
@@ -38,7 +41,7 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
-(setq evil-want-fine-undo t)
+; (setq evil-want-fine-undo t)
 (setq evil-cross-lines t)
 
 (add-to-list 'load-path "~/.emacs.d/evil")
