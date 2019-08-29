@@ -39,6 +39,8 @@
 (setq evil-want-fine-undo t)
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
+(setq evil-want-integration t)
+(setq evil-want-keybinding nil)
 
 (add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
@@ -82,7 +84,7 @@
 (define-key global-map (kbd "C-S-H") 'help-command)
 
 ; TODO: my <leader> commands
-(define-key evil-normal-state-map (kbd ", j") 'evil-join)
+(define-key evil-normal-state-map (kbd ", J") 'evil-join)
 
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
@@ -103,6 +105,9 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+(add-to-list 'load-path "~/.emacs.d/evil-collection")
+(require 'evil-collection)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; undo
@@ -152,12 +157,32 @@
   '(proof-error-face ((t (:background "dark red"))))
   '(proof-warning-face ((t (:background "indianred3")))))
 
-; TODO: line numbers
-; TODO: unicode conversion/input
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Neotree
+; TODO: disable scroll bars
+(setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob"))
+(setq neo-window-fixed-size nil)
+(setq neo-window-width 32)
+(setq neo-smart-open t)
+(setq neo-theme 'nerd)
+
+(add-to-list 'load-path "~/.emacs.d/emacs-neotree")
+(require 'neotree)
+(evil-collection-init 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(define-key evil-normal-state-map (kbd ", n n") 'neotree-toggle)
+
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(global-linum-mode 1)
+
+; TODO: unicode input
 ; TODO: Remove gui buttons
 ; TODO: use mouse to adjust window size, split line style
 ; TODO: tabbar
-; TODO: neotree, CtrlP, git gutter, MRU
+; TODO: CtrlP, git gutter, MRU
 ; TODO: evil nerdcommenter, visualstar
 ; TODO: fix normal star
 ; TODO: completion

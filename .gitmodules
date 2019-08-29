@@ -7,3 +7,9 @@
 [submodule "evil-surround"]
 	path = evil-surround
 	url = https://github.com/emacs-evil/evil-surround
+[submodule "emacs-neotree"]
+	path = emacs-neotree
+	url = https://github.com/jaypei/emacs-neotree
+[submodule "evil-collection"]
+	path = evil-collection
+	url = https://github.com/emacs-evil/evil-collection
