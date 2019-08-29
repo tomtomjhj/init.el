@@ -114,6 +114,14 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+
+(add-to-list 'load-path "~/.emacs.d/evil-nerd-commenter")
+(require 'evil-nerd-commenter)
+(evil-leader/set-key
+  "c <SPC>" 'evilnc-comment-or-uncomment-lines
+  "c c" 'evilnc-copy-and-comment-lines
+)
+
 (add-to-list 'load-path "~/.emacs.d/evil-collection")
 (require 'evil-collection)
 

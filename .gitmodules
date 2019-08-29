@@ -16,3 +16,6 @@
 [submodule "evil-leader"]
 	path = evil-leader
 	url = https://github.com/cofi/evil-leader
+[submodule "evil-nerd-commenter"]
+	path = evil-nerd-commenter
+	url = https://github.com/redguardtoo/evil-nerd-commenter
