@@ -83,9 +83,17 @@
 ; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
 
-; TODO: my <leader> commands
-(define-key evil-normal-state-map (kbd ", J") 'evil-join)
+; TODO: many other <leader> commands
+(add-to-list 'load-path "~/.emacs.d/evil-leader")
+(require 'evil-leader)
+(global-evil-leader-mode)
+(evil-leader/set-leader ",")
 
+(evil-leader/set-key
+  "e" 'find-file
+  "b" 'switch-to-buffer
+  "k" 'kill-buffer
+  "J" 'evil-join)
 
 (add-to-list 'load-path "~/.emacs.d/evil-surround")
 (require 'evil-surround)
@@ -136,22 +144,21 @@
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'proof-assert-next-command-interactive)
-; use M-c as leader for coq commands
-(evil-define-key 'normal coq-mode-map
-  (kbd "M-c h") 'company-coq-doc
-  (kbd "M-c l c") 'coq-LocateConstant
-  (kbd "M-c l l") 'proof-layout-windows
-  (kbd "M-c l p") 'proof-prf
-  (kbd "M-c x") 'proof-shell-exit
-  (kbd "M-c s") 'proof-find-theorems
-  (kbd "M-c ?") 'coq-Check
-  (kbd "M-c p") 'coq-Print
-  (kbd "M-c ;") 'pg-insert-last-output-as-comment
-  (kbd "M-c o") 'company-coq-occur)
-  (setq-default proof-three-window-mode-policy 'hybrid)
-;; no splash screen
+(evil-leader/set-key-for-mode 'coq-mode
+  "h" 'company-coq-doc
+  "l c" 'coq-LocateConstant
+  "l l" 'proof-layout-windows
+  "l p" 'proof-prf
+  "x" 'proof-shell-exit
+  "s" 'proof-find-theorems
+  "?" 'coq-Check
+  "p" 'coq-Print
+  ";" 'pg-insert-last-output-as-comment
+  "o" 'company-coq-occur)
+(setq-default proof-three-window-mode-policy 'hybrid)
+;; TODO: ?? no splash screen
 (setq proof-splash-seen t)
-; TODO: color theme
+; TODO: color theme. this option is somehow copied into custom.el
 (custom-set-faces
   '(proof-eager-annotation-face ((t (:background "medium blue"))))
   '(proof-error-face ((t (:background "dark red"))))

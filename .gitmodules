@@ -13,3 +13,6 @@
 [submodule "evil-collection"]
 	path = evil-collection
 	url = https://github.com/emacs-evil/evil-collection
+[submodule "evil-leader"]
+	path = evil-leader
+	url = https://github.com/cofi/evil-leader
