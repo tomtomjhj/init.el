@@ -7,7 +7,7 @@
  '(blink-cursor-mode nil)
  '(custom-safe-themes
    (quote
-    ("f5376334e7bcbc22a27a07f51103012321adc7c22397d87d65927f9a7b4a4cf8" default)))
+    ("6c41c95c51ffecc1a5011b8861b8c10d3cd5ecc375bd6cb5d94dd54296963fd2" default)))
  '(inhibit-startup-screen t)
  '(package-selected-packages (quote (company-coq proof-general)))
  '(show-paren-mode t))
