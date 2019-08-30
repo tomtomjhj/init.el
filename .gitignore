@@ -1,3 +1,5 @@
 elpa/
 undo/
+auto-save-list/
+places
 *.elc

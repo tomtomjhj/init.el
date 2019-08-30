@@ -15,7 +15,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn")
-; TODO: search highlight color, more contrast
 (setq zenburn-override-colors-alist
         '(("zenburn-fg+1"     . "#FFFFEF")
           ("zenburn-fg"       . "#eaeae0")
@@ -30,6 +29,7 @@
           ))
 (load-theme 'zenburn)
 
+; TODO: it's not rainbow enough
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
@@ -37,6 +37,7 @@
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
 
+; TODO: scrolling with j/k is weird
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
@@ -150,8 +151,6 @@
 ; undo
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-; Why do I need to load this path again???
-; No errors without this load-path, but won't work
 (add-to-list 'load-path "~/.emacs.d/evil/lib")
 (require 'undo-tree)
 (global-undo-tree-mode)
@@ -164,6 +163,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; - PG
+(setq proof-splash-enable nil)
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
@@ -185,8 +185,6 @@
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
 (setq-default proof-three-window-mode-policy 'hybrid)
-;; TODO: ?? no splash screen
-(setq proof-splash-seen t)
 ; TODO: color theme. this option is somehow copied into custom.el
 (custom-set-faces
   '(proof-eager-annotation-face ((t (:background "medium blue"))))
@@ -198,7 +196,7 @@
 
 ; Neotree
 ; TODO: disable scroll bars
-(setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob"))
+(setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
 (setq neo-window-fixed-size nil)
 (setq neo-window-width 32)
 (setq neo-smart-open t)
@@ -211,15 +209,21 @@
 (evil-leader/set-key
   "n n" 'neotree-toggle)
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(save-place-mode 1) ; cursor position
 (global-linum-mode 1)
+(when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
+  (tool-bar-mode -1))
+(when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
+  (menu-bar-mode -1))
+(when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
+  (scroll-bar-mode -1))
 (setq mouse-wheel-scroll-amount '(3))
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
 
+; TODO: auto-recomplile to elc? (.elc ignores changes to .el currently)
 ; TODO: unicode input
-; TODO: use mouse to adjust window size, split line style
 ; TODO: tabbar
 ; TODO: CtrlP, git gutter, MRU
 ; TODO: fix normal star
