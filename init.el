@@ -14,7 +14,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; themes
-(add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/submodules/zenburn")
 (setq zenburn-override-colors-alist
         '(("zenburn-fg+1"     . "#FFFFEF")
           ("zenburn-fg"       . "#eaeae0")
@@ -42,10 +42,9 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
-; (setq evil-want-fine-undo t)
 (setq evil-cross-lines t)
 
-(add-to-list 'load-path "~/.emacs.d/evil")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
 (evil-mode 1)
 
@@ -97,7 +96,7 @@
 (define-key global-map (kbd "C-S-H") 'help-command)
 
 ; TODO: many other <leader> commands
-(add-to-list 'load-path "~/.emacs.d/evil-leader")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-leader")
 (require 'evil-leader)
 (global-evil-leader-mode)
 (evil-leader/set-leader ",")
@@ -112,7 +111,7 @@
   "w" 'evil-write
   )
 
-(add-to-list 'load-path "~/.emacs.d/evil-surround")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-surround")
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
@@ -132,26 +131,28 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 
-(add-to-list 'load-path "~/.emacs.d/evil-nerd-commenter")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
 (evil-leader/set-key
   "c <SPC>" 'evilnc-comment-or-uncomment-lines
   "c c" 'evilnc-copy-and-comment-lines
 )
 
-(add-to-list 'load-path "~/.emacs.d/evil-visualstar")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-visualstar")
 (require 'evil-visualstar)
 (global-evil-visualstar-mode)
 
 
-(add-to-list 'load-path "~/.emacs.d/evil-collection")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection)
+
+(evil-collection-init)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; undo
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-(add-to-list 'load-path "~/.emacs.d/evil/lib")
+(add-to-list 'load-path "~/.emacs.d/submodules/evil/lib")
 (require 'undo-tree)
 (global-undo-tree-mode)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
@@ -185,7 +186,6 @@
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
 (setq-default proof-three-window-mode-policy 'hybrid)
-; TODO: color theme. this option is somehow copied into custom.el
 (custom-set-faces
   '(proof-eager-annotation-face ((t (:background "medium blue"))))
   '(proof-error-face ((t (:background "dark red"))))
@@ -202,9 +202,8 @@
 (setq neo-smart-open t)
 (setq neo-theme 'nerd)
 
-(add-to-list 'load-path "~/.emacs.d/emacs-neotree")
+(add-to-list 'load-path "~/.emacs.d/submodules/emacs-neotree")
 (require 'neotree)
-(evil-collection-init 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (evil-leader/set-key
   "n n" 'neotree-toggle)
@@ -222,6 +221,7 @@
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
 
+; TODO: use package-install for everything?
 ; TODO: auto-recomplile to elc? (.elc ignores changes to .el currently)
 ; TODO: unicode input
 ; TODO: tabbar

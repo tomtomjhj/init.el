@@ -1,24 +1,25 @@
 [submodule "evil"]
-	path = evil
+	path = submodules/evil
 	url = https://github.com/emacs-evil/evil
 [submodule "zenburn"]
-	path = zenburn
+	path = submodules/zenburn
 	url = https://github.com/tomtomjhj/zenburn-emacs
 [submodule "evil-surround"]
-	path = evil-surround
+	path = submodules/evil-surround
 	url = https://github.com/emacs-evil/evil-surround
 [submodule "emacs-neotree"]
-	path = emacs-neotree
+	path = submodules/emacs-neotree
 	url = https://github.com/jaypei/emacs-neotree
 [submodule "evil-collection"]
-	path = evil-collection
+	path = submodules/evil-collection
 	url = https://github.com/emacs-evil/evil-collection
 [submodule "evil-leader"]
-	path = evil-leader
+	path = submodules/evil-leader
 	url = https://github.com/cofi/evil-leader
 [submodule "evil-nerd-commenter"]
-	path = evil-nerd-commenter
+	path = submodules/evil-nerd-commenter
 	url = https://github.com/redguardtoo/evil-nerd-commenter
 [submodule "evil-visualstar"]
-	path = evil-visualstar
+	path = submodules/evil-visualstar
 	url = https://github.com/bling/evil-visualstar
+	ignore = untracked
