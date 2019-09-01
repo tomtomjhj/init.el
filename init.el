@@ -14,13 +14,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; themes
+; NOTE: hardcoded colors for region(block) and lazy-highlight(search)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/submodules/zenburn")
 (setq zenburn-override-colors-alist
         '(("zenburn-fg+1"     . "#FFFFEF")
           ("zenburn-fg"       . "#eaeae0")
           ("zenburn-fg-1"     . "#757565")
           ("zenburn-bg-2"     . "#000000")
-          ; NOTE: hardcoded colors for region(block) and lazy-highlight(search)
           ("zenburn-bg"       . "#1c1c1c")
           ("zenburn-bg+05"    . "#2f2f2f")
           ("zenburn-bg+1"     . "#3F3F3F")
@@ -28,6 +28,7 @@
           ("zenburn-bg+3"     . "#5F5F5F")
           ))
 (load-theme 'zenburn)
+; TODO: region should override lazy-highlight
 
 ; TODO: it's not rainbow enough
 (require 'rainbow-delimiters)
@@ -37,7 +38,10 @@
 ; evil.
 ; https://www.emacswiki.org/emacs/Evil#toc6
 
-; TODO: scrolling with j/k is weird
+(setq scroll-preserve-screen-position t
+    scroll-margin 3 ; vim's `scrolloff`
+    scroll-conservatively 101)
+
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
@@ -145,7 +149,6 @@
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection)
-
 (evil-collection-init)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -222,10 +225,8 @@
 (setq ring-bell-function 'ignore)
 
 ; TODO: use package-install for everything?
-; TODO: auto-recomplile to elc? (.elc ignores changes to .el currently)
 ; TODO: unicode input
-; TODO: tabbar
-; TODO: CtrlP, git gutter, MRU
+; TODO: tabbar, CtrlP, git gutter, MRU
 ; TODO: fix normal star
 ; TODO: completion
 ; TODO: '#file', 'file~', ....
