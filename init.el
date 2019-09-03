@@ -49,6 +49,9 @@
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-cross-lines t)
+; https://github.com/syl20bnr/spacemacs/issues/8853
+(setq evil-want-abbrev-expand-on-insert-exit nil)
+
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
@@ -101,7 +104,6 @@
 ; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
 
-; TODO: many other <leader> commands
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-leader")
 (require 'evil-leader)
 (global-evil-leader-mode)
@@ -121,7 +123,7 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
-; esc to quit everything. TODO: not complete?
+; esc to quit everything.
 (defun minibuffer-keyboard-quit ()
   (interactive)
   (if (and delete-selection-mode transient-mark-mode mark-active)
@@ -148,7 +150,6 @@
 (require 'evil-visualstar)
 (global-evil-visualstar-mode)
 
-
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection)
 (evil-collection-init)
@@ -169,6 +170,8 @@
 (global-undo-tree-mode)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
+; TODO: undo-tree-undo'ing in proved(?) part may break something.
+; https://github.com/ProofGeneral/PG/issues/430
 
 ; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
 ; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
@@ -180,7 +183,6 @@
 (add-hook 'coq-mode-hook #'company-coq-mode)
 ; TODO: more keybindings from company-coq
 ; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
-; TODO: undo-tree-undo'ing in proved(?) part may break something.
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
@@ -208,11 +210,9 @@
   '(proof-error-face ((t (:background "dark red"))))
   '(proof-warning-face ((t (:background "indianred3")))))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Neotree
-; TODO: disable scroll bars
 (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
 (setq neo-window-fixed-size nil)
 (setq neo-window-width 32)
@@ -241,12 +241,8 @@
 ; TODO: use package-install for everything?
 ; TODO: unicode input
 ; TODO: tabbar, CtrlP, git gutter, MRU
+; https://www.emacswiki.org/emacs/RecentFiles
 ; TODO: fix normal star
 ; TODO: completion
 ; TODO: '#file', 'file~', ....
 ; https://stackoverflow.com/questions/12031830/what-are-file-and-file-and-how-can-i-get-rid-of-them
-
-; https://doingmyprogramming.wordpress.com/2015/12/17/getting-started-with-coq-and-proof-general/
-; https://www.williamjbowman.com/blog/2012/07/26/using-evil-for-good/
-; https://stackoverflow.com/questions/8483182/evil-mode-best-practice
-; https://github.com/ProofGeneral/PG/issues/430
