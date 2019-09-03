@@ -33,6 +33,8 @@
 ; TODO: it's not rainbow enough
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'coq-response-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'coq-goals-mode-hook 'rainbow-delimiters-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; evil.
@@ -169,6 +171,9 @@
 ; - PG
 (setq proof-splash-enable nil)
 (add-hook 'coq-mode-hook #'company-coq-mode)
+; TODO: more keybindings from company-coq
+; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
+; TODO: undo-tree-undo'ing in proved(?) part may break something.
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
@@ -182,10 +187,12 @@
   "l c" 'coq-LocateConstant
   "l l" 'proof-layout-windows
   "l p" 'proof-prf
+  "C-c" 'proof-interrupt-process
   "x" 'proof-shell-exit
   "s" 'proof-find-theorems
   "?" 'coq-Check
   "p" 'coq-Print
+  "." 'company-coq-jump-to-definition
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
 (setq-default proof-three-window-mode-policy 'hybrid)
