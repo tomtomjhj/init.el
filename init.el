@@ -153,6 +153,13 @@
 (require 'evil-collection)
 (evil-collection-init)
 
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
+(require 'evil-snipe)
+(evil-snipe-override-mode +1) ; clever-f
+(setq evil-snipe-scope 'whole-buffer)
+(setq evil-snipe-repeat-scope 'whole-buffer)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; undo
 (setq undo-tree-auto-save-history t)

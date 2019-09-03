@@ -23,3 +23,6 @@
 	path = submodules/evil-visualstar
 	url = https://github.com/bling/evil-visualstar
 	ignore = untracked
+[submodule "submodules/evil-snipe"]
+	path = submodules/evil-snipe
+	url = https://github.com/hlissner/evil-snipe
