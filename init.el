@@ -156,12 +156,26 @@
 (require 'evil-collection)
 (evil-collection-init)
 
+(defun my/star-keep-position ()
+  (interactive)
+  (evil-ex-search-word-forward)
+  (evil-ex-search-previous)) ; use (evil-search-previous) if not using evil-search
+(defun my/visualstar-keep-position ()
+  (interactive)
+  (when (region-active-p)
+    (evil-visualstar/begin-search (region-beginning) (region-end) t)
+    (evil-ex-search-previous)))
+
+(evil-define-key 'normal evil-motion-state-map (kbd "*") 'my/star-keep-position)
+(evil-define-key 'visual evil-visualstar-mode-map (kbd "*") 'my/visualstar-keep-position)
+
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
-(require 'evil-snipe)
-(evil-snipe-mode +1)
-(evil-snipe-override-mode +1) ; clever-f
 (setq evil-snipe-scope 'whole-buffer)
 (setq evil-snipe-repeat-scope 'whole-buffer)
+(setq evil-snipe-smart-case t)
+(require 'evil-snipe)
+(evil-snipe-mode +1)
+(evil-snipe-override-mode +1)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -246,6 +260,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (save-place-mode 1) ; cursor position
 (global-linum-mode 1)
+(setq column-number-mode t)
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
   (tool-bar-mode -1))
 (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
@@ -260,10 +275,10 @@
 ; TODO: use-package for language-specific stuff? `:command` looks good
 ; examples: https://github.com/SkySkimmer/.emacs.d
 ; https://www.emacswiki.org/emacs/ELPA#toc5
+; TODO: remove submodules except zenburn
 ; TODO: unicode input
 ; TODO: tabbar, CtrlP, git gutter, MRU
 ; https://www.emacswiki.org/emacs/RecentFiles
-; TODO: fix normal star
 ; TODO: completion
 ; TODO: '#file', 'file~', ....
 ; https://stackoverflow.com/questions/12031830/what-are-file-and-file-and-how-can-i-get-rid-of-them
