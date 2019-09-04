@@ -10,7 +10,9 @@
        (proto (if no-ssl "http" "https")))
   (add-to-list 'package-archives
                (cons "melpa" (concat proto "://melpa.org/packages/")) t))
+(setq package-enable-at-startup nil)
 (package-initialize)
+(require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; themes
@@ -156,6 +158,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
 (require 'evil-snipe)
+(evil-snipe-mode +1)
 (evil-snipe-override-mode +1) ; clever-f
 (setq evil-snipe-scope 'whole-buffer)
 (setq evil-snipe-repeat-scope 'whole-buffer)
@@ -211,7 +214,6 @@
   '(proof-warning-face ((t (:background "indianred3")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ; Neotree
 (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
 (setq neo-window-fixed-size nil)
@@ -226,6 +228,22 @@
   "n n" 'neotree-toggle)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; markdown https://leanpub.com/markdown-mode/read
+; TODO setup for pdf output
+
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . gfm-mode)
+  :init
+  (setq markdown-command
+        (concat
+         "pandoc"
+         " --from=markdown --to=html"
+         " --standalone --mathjax --highlight-style=pygments"))
+  (setq markdown-enable-math t)
+  (setq markdown-use-pandoc-style-yaml-metadata t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (save-place-mode 1) ; cursor position
 (global-linum-mode 1)
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
@@ -237,8 +255,11 @@
 (setq mouse-wheel-scroll-amount '(3))
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
+(setq make-backup-files nil)
 
-; TODO: use package-install for everything?
+; TODO: use-package for language-specific stuff? `:command` looks good
+; examples: https://github.com/SkySkimmer/.emacs.d
+; https://www.emacswiki.org/emacs/ELPA#toc5
 ; TODO: unicode input
 ; TODO: tabbar, CtrlP, git gutter, MRU
 ; https://www.emacswiki.org/emacs/RecentFiles

@@ -9,7 +9,9 @@
    (quote
     ("6c41c95c51ffecc1a5011b8861b8c10d3cd5ecc375bd6cb5d94dd54296963fd2" default)))
  '(inhibit-startup-screen t)
- '(package-selected-packages (quote (rainbow-delimiters company-coq proof-general)))
+ '(package-selected-packages
+   (quote
+    (markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
