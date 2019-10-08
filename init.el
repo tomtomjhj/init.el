@@ -78,7 +78,9 @@
 (require 'evil)
 (evil-mode 1)
 
-(modify-syntax-entry ?_ "w") ; `_` isn't word char in emacs
+; `_` isn't word char in emacs
+; TODO overriden by coq stuff
+(modify-syntax-entry ?_ "w")
 (evil-select-search-module 'evil-search-module 'evil-search)
 
 (lexical-let*
@@ -185,7 +187,7 @@
     (evil-visualstar/begin-search (region-beginning) (region-end) t)
     (evil-ex-search-previous)))
 
-(evil-define-key 'normal evil-motion-state-map (kbd "*") 'my/star-keep-position)
+(evil-global-set-key 'normal (kbd "*") 'my/star-keep-position)
 (evil-define-key 'visual evil-visualstar-mode-map (kbd "*") 'my/visualstar-keep-position)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
@@ -240,6 +242,9 @@
   "." 'company-coq-jump-to-definition
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
+; interaction of jump-to-definition and evil jump lists (C-o, C-i)
+(evil-add-command-properties #'company-coq-jump-to-definition :jump t)
+
 (setq-default proof-three-window-mode-policy 'hybrid)
 (custom-set-faces
   '(proof-eager-annotation-face ((t (:background "medium blue"))))
@@ -263,6 +268,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; markdown https://leanpub.com/markdown-mode/read
 ; TODO setup for pdf output
+; TODO html output is broken w/ quotes
 
 (use-package markdown-mode
   :ensure t
@@ -272,7 +278,7 @@
         (concat
          "pandoc"
          " --from=markdown --to=html"
-         " --standalone --mathjax --highlight-style=pygments"))
+         " --standalone --mathjax --ascii --highlight-style=kate"))
   (setq markdown-enable-math t)
   (setq markdown-use-pandoc-style-yaml-metadata t))
 
@@ -296,8 +302,8 @@
 ; https://www.emacswiki.org/emacs/ELPA#toc5
 ; TODO: remove submodules except zenburn
 ; TODO: unicode input
-; TODO: tabbar, CtrlP, git gutter, MRU
+; TODO: tabbar, CtrlP/fzf-like things, git gutter, MRU
 ; https://www.emacswiki.org/emacs/RecentFiles
-; TODO: completion
+; TODO: general completion
 ; TODO: '#file', 'file~', ....
 ; https://stackoverflow.com/questions/12031830/what-are-file-and-file-and-how-can-i-get-rid-of-them
