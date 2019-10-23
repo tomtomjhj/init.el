@@ -70,6 +70,8 @@
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-cross-lines t)
+; TODO search still doesn't work like vim e.g. \w\+
+(setq evil-ex-search-vim-style-regexp t)
 ; https://github.com/syl20bnr/spacemacs/issues/8853
 (setq evil-want-abbrev-expand-on-insert-exit nil)
 
@@ -79,8 +81,9 @@
 (evil-mode 1)
 
 ; `_` isn't word char in emacs
-; TODO overriden by coq stuff
-(modify-syntax-entry ?_ "w")
+(add-hook 'after-change-major-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
+
 (evil-select-search-module 'evil-search-module 'evil-search)
 
 (lexical-let*
