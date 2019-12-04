@@ -1,6 +1,7 @@
 elpa/
 undo/
 auto-save-list/
+backup/
 .cache/
 places
 *.elc
