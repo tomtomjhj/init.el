@@ -68,6 +68,7 @@
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-cross-lines t)
+(setq evil-want-minibuffer t)
 ; TODO search still doesn't work like vim e.g. \w\+
 (setq evil-ex-search-vim-style-regexp t)
 ; https://github.com/syl20bnr/spacemacs/issues/8853
@@ -158,6 +159,8 @@
   "<RET>" 'evil-ex-nohighlight
   "q" 'evil-quit
   "w" 'evil-write
+  "f n" (lambda () (interactive) (message (buffer-file-name)))
+  "a f" 'delete-trailing-whitespace
   )
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-surround")
@@ -190,6 +193,9 @@
 (setq evil-snipe-scope 'whole-buffer)
 (setq evil-snipe-repeat-scope 'whole-buffer)
 (setq evil-snipe-smart-case t)
+; TODO: `,`, mappping overrides <leader> in snipe state(?)
+; TODO: direction
+; (setq evil-snipe-override-evil-repeat-keys nil)
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
@@ -238,13 +244,15 @@
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'proof-assert-next-command-interactive)
+  (kbd "M-j") 'proof-assert-next-command-interactive
+  (kbd "M-[") 'company-coq-doc
+  (kbd "M-]") 'company-coq-jump-to-definition
+  )
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'proof-assert-next-command-interactive)
 (evil-leader/set-key-for-mode 'coq-mode
-  "h" 'company-coq-doc
   "l c" 'coq-LocateConstant
   "l l" 'proof-layout-windows
   "l p" 'proof-prf
@@ -253,7 +261,6 @@
   "s" 'proof-find-theorems
   "?" 'coq-Check
   "p" 'coq-Print
-  "." 'company-coq-jump-to-definition
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
@@ -283,6 +290,7 @@
 ; etc etc {{{
 (save-place-mode 1) ; cursor position
 (global-linum-mode 1)
+(electric-pair-mode 1)
 (setq column-number-mode t)
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
   (tool-bar-mode -1))
@@ -300,16 +308,29 @@
 
 ; http://ergoemacs.org/emacs/emacs_set_backup_into_a_directory.html
 (defun my-backup-file-name (fpath)
-  (let* (
-        (backupRootDir "~/.emacs.d/backup/")
-        (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath ))
-        (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
-        )
+  (let* ((backupRootDir "~/.emacs.d/backup/")
+         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath))
+         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~"))))
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath
   )
 )
 (setq make-backup-file-name-function 'my-backup-file-name)
+
+(setq evil-digraphs-table-user
+      '(((?l ?s) . ?\x2097) ; ₗ subsript l
+        ((?u ?l) . ?\x231c) ; ⌜ ulcorner
+        ((?u ?r) . ?\x231d) ; ⌝ urcorner
+        ((?m ?t) . ?\x21A6) ; ↦ mapsto
+        ((?| ?-) . ?\x22A2) ; ⊢ vdash
+        ((?- ?|) . ?\x22A3) ; ⊣ dashv
+        ((?i ?n) . ?\x2208) ; ∈ in
+        ((?* ?*) . ?\x2217) ; ∗ ast
+        ((?t ?r) . ?\x25b7) ; ▷
+        ((?o ?s) . ?\x25a1) ; □
+        ))
+
+(setq-default fill-column 80)
 ; }}}
 
 ; TODO: use-package for language-specific stuff? `:command` looks good
@@ -323,3 +344,6 @@
 ; https://www.emacswiki.org/emacs/RecentFiles
 ; TODO: general keyword completion
 ; - https://www.emacswiki.org/emacs/TabCompletion
+; TODO evil jump list is severely broken
+; - https://github.com/emacs-evil/evil/issues/1138
+; TODO remove useless prompts like 'end of buffer', 'Text is read only', ...

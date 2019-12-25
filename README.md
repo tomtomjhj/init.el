@@ -11,11 +11,21 @@ then, in emacs,
 ```
 M-x package-refresh-contents <RET>
 M-x package-install-selected-packages <RET>
-C-u 0 M-x byte-recompile-directory <RET> ~/.emacs.d/submodules <RET>
-C-x C-c # quit emacs
+C-x C-c
 ```
 
 # Note
 
 * `C-z` to enter emacs mode
-* `M-x byte-recompile-directory` after updating submodules
+* don't do this
+```
+C-u 0 M-x byte-recompile-directory <RET> ~/.emacs.d/submodules <RET>
+M-x byte-recompile-directory
+```
+* upgrade packages
+```
+M-x package-refresh-contents <RET>
+M-x list-packages <RET>
+U
+x
+```
