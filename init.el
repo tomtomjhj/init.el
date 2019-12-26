@@ -309,6 +309,16 @@
   (setq markdown-use-pandoc-style-yaml-metadata t))
 ; }}}
 
+; font {{{
+(set-face-attribute 'default nil :height 110)
+(dolist (ft (fontset-list))
+  ; Main font
+  (set-fontset-font ft 'unicode (font-spec :family "Source Code Pro" :foundry "ADBO"))
+  ; Fallback font
+  (set-fontset-font ft nil (font-spec :name "DejaVu Sans Mono")))
+(set-fontset-font t nil (font-spec :name "Symbola"))
+; }}}
+
 ; etc etc {{{
 (save-place-mode 1) ; cursor position
 (global-linum-mode 1)
