@@ -62,13 +62,12 @@
 ; settings, loading, hooks {{{
 (setq scroll-preserve-screen-position t
     scroll-margin 3 ; vim's `scrolloff`
-    scroll-conservatively 101)
+    scroll-conservatively 101) ; TODO loading PG  changes the scrolling behavior
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-cross-lines t)
-(setq evil-want-minibuffer t)
 ; TODO search still doesn't work like vim e.g. \w\+
 (setq evil-ex-search-vim-style-regexp t)
 ; https://github.com/syl20bnr/spacemacs/issues/8853
@@ -82,6 +81,20 @@
 (add-hook 'after-change-major-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
 (evil-select-search-module 'evil-search-module 'evil-search)
+; }}}
+
+; stuff that evil should've handled {{{
+; NOTE: Do not (setq evil-want-minibuffer t)
+; This option makes the minibuffer work like a normal vim window. ESC exits the
+; insert mode of the minibuffer window instead of exiting the minibuffer.
+; Solution: bind evil-paste-from-register in minibuffer-local-map.
+(define-key minibuffer-local-map (kbd "C-r") 'evil-paste-from-register)
+(define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
+(define-key minibuffer-local-map (kbd "C-<SPC>") 'evil-insert-digraph)
+
+(define-key evil-insert-state-map (kbd "C-u")
+  (lambda () (interactive) (evil-delete (point-at-bol) (point))))
+
 ; }}}
 
 ; basic {{{
@@ -301,6 +314,7 @@
 (setq mouse-wheel-scroll-amount '(3))
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ; http://ergoemacs.org/emacs/emacs_auto_save.html
 (setq auto-save-default nil)
