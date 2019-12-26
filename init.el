@@ -218,7 +218,16 @@
 (require 'evil-collection)
 (evil-collection-init)
 ; }}}
-; }}}
+
+; misc {{{
+; fine-grained word
+(global-syntax-subword-mode)
+(define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
+(define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
+(define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
+
+;}}}
+;}}}
 
 ; Neotree {{{
 (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
