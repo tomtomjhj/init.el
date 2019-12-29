@@ -95,6 +95,8 @@
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (evil-delete (point-at-bol) (point))))
 
+(defun my/break-undo (f)
+  (progn (evil-end-undo-step) (funcall f) (evil-start-undo-step)))
 ; }}}
 
 ; basic {{{
@@ -259,21 +261,21 @@
 ;}}}
 
 ; coq {{{
-(setq proof-splash-enable nil)
-(add-hook 'coq-mode-hook #'company-coq-mode)
 ; TODO: more keybindings from company-coq
 ; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'proof-assert-next-command-interactive
+  (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-[") 'company-coq-doc
   (kbd "M-]") 'company-coq-jump-to-definition
+  ; use <menu> for the definition of a symbol in the goal/response window
   )
 (evil-define-key 'insert coq-mode-map
-  (kbd "M-l") 'proof-goto-point
-  (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'proof-assert-next-command-interactive)
+  (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
+  (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
+  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
+(global-unset-key (kbd "M-h"))
 (evil-leader/set-key-for-mode 'coq-mode
   "l c" 'coq-LocateConstant
   "l l" 'proof-layout-windows
@@ -285,6 +287,24 @@
   "p" 'coq-Print
   ";" 'pg-insert-last-output-as-comment
   "o" 'company-coq-occur)
+
+; TODO: don't force `forall` auto formatting
+
+; etc  {{{
+(defun my/proof-assert-next-command ()
+  "Don't go to the next line"
+  (interactive)
+  (proof-with-script-buffer
+    (save-excursion
+      (goto-char (proof-queue-or-locked-end))
+      (skip-chars-forward " \t\n")
+      (proof-assert-until-point))
+    (proof-maybe-follow-locked-end)
+    (skip-chars-backward "\n")))
+
+(setq proof-splash-enable nil)
+(add-hook 'coq-mode-hook #'company-coq-mode)
+
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
 
@@ -293,6 +313,7 @@
   '(proof-eager-annotation-face ((t (:background "medium blue"))))
   '(proof-error-face ((t (:background "dark red"))))
   '(proof-warning-face ((t (:background "indianred3")))))
+; }}}
 ; }}}
 
 ; markdown https://leanpub.com/markdown-mode/read {{{
