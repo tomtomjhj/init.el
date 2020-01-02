@@ -316,10 +316,6 @@
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
 
 (setq-default proof-three-window-mode-policy 'hybrid)
-(custom-set-faces
-  '(proof-eager-annotation-face ((t (:background "medium blue"))))
-  '(proof-error-face ((t (:background "dark red"))))
-  '(proof-warning-face ((t (:background "indianred3")))))
 ; }}}
 ; }}}
 

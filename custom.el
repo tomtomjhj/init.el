@@ -20,4 +20,6 @@
  ;; If there is more than one, they won't work right.
  '(proof-eager-annotation-face ((t (:background "medium blue"))))
  '(proof-error-face ((t (:background "dark red"))))
+ '(proof-locked-face ((t (:background "#00283c"))))
+ '(proof-queue-face ((t (:background "#304060"))))
  '(proof-warning-face ((t (:background "indianred3")))))
