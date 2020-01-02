@@ -215,9 +215,11 @@
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
 
-; NOTE: DO NOT UPDATE THIS SUBMODULE. Use 0.0.2.
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
-(require 'evil-collection)
+; NOTE: Setting this to true breaks snippets for coq (just use C-n C-p for selection)
+; TODO: Ideally, I want supertab + ulisnips behavior. File an issue?
+(setq evil-collection-company-use-tng nil)
+(require 'evil-collection) ; this requires "annalist" package
 (evil-collection-init)
 ; }}}
 
@@ -274,7 +276,12 @@
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
-  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
+  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
+  ; this was mapped to 'company-coq-features/code-folding-toggle-block
+  (kbd "<backtab>") 'yas-prev-field
+  (kbd "<S-iso-lefttab>") 'yas-prev-field
+  (kbd "<S-tab>") 'yas-prev-field
+  )
 (global-unset-key (kbd "M-h"))
 (evil-leader/set-key-for-mode 'coq-mode
   "l c" 'coq-LocateConstant
