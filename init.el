@@ -138,8 +138,8 @@
 (define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
-(define-key evil-motion-state-map (kbd "<SPC>") 'evil-scroll-down)
-(define-key evil-motion-state-map (kbd "C-<SPC>") 'evil-scroll-up)
+(define-key evil-normal-state-map (kbd "<SPC>") 'evil-scroll-down)
+(define-key evil-normal-state-map (kbd "C-<SPC>") 'evil-scroll-up)
 
 ; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
@@ -210,7 +210,6 @@
 (setq evil-snipe-smart-case t)
 ; TODO: `,`, mappping overrides <leader> in snipe state(?)
 ; TODO: direction
-; (setq evil-snipe-override-evil-repeat-keys nil)
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
