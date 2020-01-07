@@ -224,6 +224,7 @@
 
 ; misc {{{
 ; fine-grained word
+; TODO: no camel case, more fine-grained control over special characters
 (global-syntax-subword-mode)
 (define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
 (define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
@@ -295,6 +296,8 @@
   "o" 'company-coq-occur)
 
 ; TODO: don't force `forall` auto formatting
+; TODO: C-c C-/ folding is incompetent
+(put 'company-coq-fold 'disabled nil)
 
 ; etc  {{{
 (defun my/proof-assert-next-command ()
@@ -344,7 +347,8 @@
 
 ; etc etc {{{
 (save-place-mode 1) ; cursor position
-(global-linum-mode 1)
+(setq display-line-numbers-width-start t)
+(global-display-line-numbers-mode 1)
 (electric-pair-mode 1)
 (setq column-number-mode t)
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
@@ -382,8 +386,11 @@
         ((?- ?|) . ?\x22A3) ; ⊣ dashv
         ((?i ?n) . ?\x2208) ; ∈ in
         ((?* ?*) . ?\x2217) ; ∗ ast
-        ((?t ?r) . ?\x25b7) ; ▷
-        ((?o ?s) . ?\x25a1) ; □
+        ((?t ?r) . ?\x25b7) ; ▷ Tr
+        ((?o ?s) . ?\x25a1) ; □ OS
+        ((?o ?o) . ?\x25cf) ; ● (0M)
+        ((?O ?O) . ?\x25ef) ; ◯ (cf. ○ 0m)
+        ; (⋅ cdot .P),
         ))
 
 (setq-default fill-column 80)
