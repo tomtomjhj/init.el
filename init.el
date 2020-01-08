@@ -216,11 +216,17 @@
 (evil-snipe-override-mode +1)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
-; NOTE: Setting this to true breaks snippets for coq (just use C-n C-p for selection)
-; TODO: Ideally, I want supertab + ulisnips behavior. File an issue?
-(setq evil-collection-company-use-tng nil)
 (require 'evil-collection) ; this requires "annalist" package
+(dolist (mode '(company))
+  (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
 (evil-collection-init)
+
+(evil-collection-define-key nil 'company-active-map
+  (kbd "C-w") 'evil-delete-backward-word
+  (kbd "<tab>") 'company-select-next-or-abort
+  (kbd "<backtab>") 'company-select-previous-or-abort
+  (kbd "<S-iso-lefttab>") 'company-select-previous-or-abort
+  (kbd "<S-tab>") 'company-select-previous-or-abort)
 ; }}}
 
 ; misc {{{
@@ -230,6 +236,8 @@
 (define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
 (define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
 (define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
+(define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
+(define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
 
 ;}}}
 ;}}}
@@ -369,7 +377,7 @@
 
 ; etc etc {{{
 (save-place-mode 1) ; cursor position
-(setq display-line-numbers-width-start t)
+(setq display-line-numbers-width-start t) ; TODO: this isn't buffer-local?
 (global-display-line-numbers-mode 1)
 (electric-pair-mode 1)
 (setq column-number-mode t)
@@ -412,6 +420,7 @@
         ((?o ?s) . ?\x25a1) ; □ OS
         ((?o ?o) . ?\x25cf) ; ● (0M)
         ((?O ?O) . ?\x25ef) ; ◯ (cf. ○ 0m)
+        ((?< ?\\) . ?\x227c) ; ≼
         ; (⋅ cdot .P),
         ))
 
