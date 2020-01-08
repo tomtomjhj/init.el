@@ -67,6 +67,7 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
+(setq evil-want-Y-yank-to-eol t)
 (setq evil-cross-lines t)
 ; TODO search still doesn't work like vim e.g. \w\+
 (setq evil-ex-search-vim-style-regexp t)
@@ -265,14 +266,27 @@
 ; coq {{{
 ; TODO: more keybindings from company-coq
 ; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
+; Note: use <menu> for the definition of a symbol in the goal/response window
+; Note: this can't be done with things like dolist because `-map` is variable
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
-  (kbd "M-[") 'company-coq-doc
-  (kbd "M-]") 'company-coq-jump-to-definition
-  ; use <menu> for the definition of a symbol in the goal/response window
-  )
+  (kbd "M-d") 'company-coq-doc
+  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-]") 'company-coq-jump-to-definition)
+(evil-define-key 'normal coq-response-mode-map
+  (kbd "M-k") 'proof-undo-last-successful-command
+  (kbd "M-j") 'my/proof-assert-next-command
+  (kbd "M-d") 'company-coq-doc
+  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-]") 'company-coq-jump-to-definition)
+(evil-define-key 'normal coq-goals-mode-map
+  (kbd "M-k") 'proof-undo-last-successful-command
+  (kbd "M-j") 'my/proof-assert-next-command
+  (kbd "M-d") 'company-coq-doc
+  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
@@ -283,17 +297,18 @@
   (kbd "<S-tab>") 'yas-prev-field
   )
 (global-unset-key (kbd "M-h"))
-(evil-leader/set-key-for-mode 'coq-mode
-  "l c" 'coq-LocateConstant
-  "l l" 'proof-layout-windows
-  "l p" 'proof-prf
-  "C-c" 'proof-interrupt-process
-  "x" 'proof-shell-exit
-  "s" 'proof-find-theorems
-  "?" 'coq-Check
-  "p" 'coq-Print
-  ";" 'pg-insert-last-output-as-comment
-  "o" 'company-coq-occur)
+(dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
+  (evil-leader/set-key-for-mode mode
+    "l c" 'coq-LocateConstant
+    "l l" 'proof-layout-windows
+    "l p" 'proof-prf
+    "C-c" 'proof-interrupt-process
+    "x" 'proof-shell-exit
+    "s" 'proof-find-theorems
+    "?" 'coq-Check
+    "p" 'coq-Print
+    ";" 'pg-insert-last-output-as-comment
+    "o" 'company-coq-occur))
 
 ; TODO: don't force `forall` auto formatting
 ; TODO: C-c C-/ folding is incompetent
@@ -310,6 +325,13 @@
       (proof-assert-until-point))
     (proof-maybe-follow-locked-end)
     (skip-chars-backward "\n")))
+
+(defun my/coq-Check-point ()
+  (interactive)
+  (let* ((sb-pos (company-coq-symbol-at-point-with-pos)))
+    (unless sb-pos (error "No symbol here"))
+    (proof-shell-ready-prover)
+    (proof-shell-invisible-command (format (concat  "Check %s . ") (car sb-pos)))))
 
 (setq proof-splash-enable nil)
 (add-hook 'coq-mode-hook #'company-coq-mode)
