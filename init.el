@@ -92,6 +92,7 @@
 (define-key minibuffer-local-map (kbd "C-r") 'evil-paste-from-register)
 (define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
 (define-key minibuffer-local-map (kbd "C-<SPC>") 'evil-insert-digraph)
+; TODO completion in minibuffer
 
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (evil-delete (point-at-bol) (point))))
@@ -177,6 +178,8 @@
   "w" 'evil-write
   "f n" (lambda () (interactive) (message (buffer-file-name)))
   "a f" 'delete-trailing-whitespace
+  "s w" 'toggle-truncate-lines
+  "t i" 'electric-indent-local-mode
   )
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-surround")
@@ -312,15 +315,11 @@
     "l p" 'proof-prf
     "C-c" 'proof-interrupt-process
     "x" 'proof-shell-exit
-    "s" 'proof-find-theorems
+    "S" 'proof-find-theorems
     "?" 'coq-Check
     "p" 'coq-Print
     ";" 'pg-insert-last-output-as-comment
     "o" 'company-coq-occur))
-
-; TODO: don't force `forall` auto formatting
-; TODO: C-c C-/ folding is incompetent
-(put 'company-coq-fold 'disabled nil)
 
 ; etc  {{{
 (defun my/proof-assert-next-command ()
@@ -343,6 +342,9 @@
 
 (setq proof-splash-enable nil)
 (add-hook 'coq-mode-hook #'company-coq-mode)
+
+; TODO: C-c C-/ folding also hides empty lines for no good reason
+(put 'company-coq-fold 'disabled nil)
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
