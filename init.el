@@ -382,6 +382,7 @@
   ; Fallback font
   (set-fontset-font ft nil (font-spec :name "DejaVu Sans Mono")))
 (set-fontset-font t nil (font-spec :name "Symbola"))
+(set-fontset-font nil 'hangul (font-spec :family "D2Coding"))
 ; }}}
 
 ; etc settings {{{
