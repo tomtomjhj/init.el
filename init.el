@@ -61,8 +61,8 @@
 ; https://www.emacswiki.org/emacs/Evil#toc6
 ; settings, loading, hooks {{{
 (setq scroll-preserve-screen-position t
-    scroll-margin 3 ; vim's `scrolloff`
-    scroll-conservatively 101) ; TODO loading PG  changes the scrolling behavior
+      scroll-margin 3 ; vim's `scrolloff`
+      scroll-conservatively 101)
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-integration t)
@@ -353,7 +353,8 @@
 ; }}}
 ; }}}
 
-; markdown https://leanpub.com/markdown-mode/read {{{
+; etc packages {{{
+; https://leanpub.com/markdown-mode/read
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'" . gfm-mode)
@@ -365,6 +366,12 @@
          " --standalone --mathjax --ascii --highlight-style=kate"))
   (setq markdown-enable-math t)
   (setq markdown-use-pandoc-style-yaml-metadata t))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 ; }}}
 
 ; font {{{
@@ -377,7 +384,7 @@
 (set-fontset-font t nil (font-spec :name "Symbola"))
 ; }}}
 
-; etc etc {{{
+; etc settings {{{
 (save-place-mode 1) ; cursor position
 (setq display-line-numbers-width-start t) ; TODO: this isn't buffer-local?
 (global-display-line-numbers-mode 1)

@@ -11,7 +11,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
+    (editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
