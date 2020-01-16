@@ -284,18 +284,21 @@
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
+  (kbd "M-.") 'my/coq-Print-point
   (kbd "M-[") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'normal coq-response-mode-map
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
+  (kbd "M-.") 'my/coq-Print-point
   (kbd "M-[") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'normal coq-goals-mode-map
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
+  (kbd "M-.") 'my/coq-Print-point
   (kbd "M-[") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
@@ -333,12 +336,19 @@
     (proof-maybe-follow-locked-end)
     (skip-chars-backward "\n")))
 
-(defun my/coq-Check-point ()
-  (interactive)
+(defun my/coq-command-point (cmd)
   (let* ((sb-pos (company-coq-symbol-at-point-with-pos)))
     (unless sb-pos (error "No symbol here"))
     (proof-shell-ready-prover)
-    (proof-shell-invisible-command (format (concat  "Check %s . ") (car sb-pos)))))
+    (proof-shell-invisible-command (format (concat cmd) (car sb-pos)))))
+
+(defun my/coq-Check-point ()
+  (interactive)
+  (my/coq-command-point "Check %s . "))
+
+(defun my/coq-Print-point ()
+  (interactive)
+  (my/coq-command-point "Print %s . "))
 
 (setq proof-splash-enable nil)
 (add-hook 'coq-mode-hook #'company-coq-mode)
@@ -412,9 +422,7 @@
          (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath))
          (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~"))))
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-    backupFilePath
-  )
-)
+    backupFilePath))
 (setq make-backup-file-name-function 'my-backup-file-name)
 
 (setq evil-digraphs-table-user
