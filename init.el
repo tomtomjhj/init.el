@@ -275,7 +275,6 @@
 ;}}}
 
 ; coq {{{
-; TODO: more keybindings from company-coq
 ; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
 ; Note: use <menu> for the definition of a symbol in the goal/response window
 ; Note: this can't be done with things like dolist because `-map` is variable
@@ -382,6 +381,10 @@
   :config
   (editorconfig-mode 1))
 
+(use-package hl-todo
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook #'hl-todo-mode))
 ; }}}
 
 ; font {{{
