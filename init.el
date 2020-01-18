@@ -64,7 +64,7 @@
       scroll-margin 3 ; vim's `scrolloff`
       scroll-conservatively 101)
 (setq evil-want-C-i-jump t)
-(setq evil-want-C-u-scroll t)
+(setq evil-want-C-u-scroll t) ; TODO: alternative map for original C-u
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-want-Y-yank-to-eol t)
@@ -223,13 +223,6 @@
 (dolist (mode '(company))
   (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
 (evil-collection-init)
-
-(evil-collection-define-key nil 'company-active-map
-  (kbd "C-w") 'evil-delete-backward-word
-  (kbd "<tab>") 'company-select-next-or-abort
-  (kbd "<backtab>") 'company-select-previous-or-abort
-  (kbd "<S-iso-lefttab>") 'company-select-previous-or-abort
-  (kbd "<S-tab>") 'company-select-previous-or-abort)
 ; }}}
 
 ; misc {{{
@@ -267,8 +260,8 @@
 (global-undo-tree-mode)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
-; TODO: undo-tree-undo'ing in proved(?) part may break something.
-; https://github.com/ProofGeneral/PG/issues/430
+; TODO: undo-tree-undo'ing in the PG locked region may break the proof
+; https://github.com/ProofGeneral/PG/issues/430#issuecomment-511967635
 ; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
 ; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
 ; what does undo-tree.el do in evil???
@@ -303,12 +296,7 @@
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
-  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
-  ; this was mapped to 'company-coq-features/code-folding-toggle-block
-  (kbd "<backtab>") 'yas-prev-field
-  (kbd "<S-iso-lefttab>") 'yas-prev-field
-  (kbd "<S-tab>") 'yas-prev-field
-  )
+  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
 (global-unset-key (kbd "M-h"))
 (dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
   (evil-leader/set-key-for-mode mode
@@ -363,6 +351,7 @@
 ; }}}
 
 ; etc packages {{{
+; TODO: use-package all non-submodule stuff
 ; https://leanpub.com/markdown-mode/read
 (use-package markdown-mode
   :ensure t
@@ -385,6 +374,37 @@
   :ensure t
   :init
   (add-hook 'prog-mode-hook #'hl-todo-mode))
+
+; completion & snippets with supertab + ultisnips behavior
+(use-package company
+  :ensure t
+  :config
+  (setq company-idle-delay 0.2)
+  (setq company-transformers
+	'(company-sort-by-backend-importance
+	  company-sort-prefer-same-case-prefix
+	  company-sort-by-occurrence))
+  (company-tng-configure-default)
+  (evil-collection-define-key nil 'company-active-map
+    (kbd "C-w") 'evil-delete-backward-word
+    (kbd "<tab>") 'company-select-next
+    ; '(lambda () (interactive) (company-complete-common-or-cycle -1))
+    (kbd "<backtab>") 'company-select-previous-or-abort
+    (kbd "<S-iso-lefttab>") 'company-select-previous-or-abort
+    (kbd "<S-tab>") 'company-select-previous-or-abort)
+  ; https://github.com/company-mode/company-mode/issues/881
+  (advice-add 'company-tng--supress-post-completion :override #'ignore)
+  :hook (after-init . global-company-mode))
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (define-key yas-minor-mode-map "\C-l" 'yas-expand)
+  (define-key yas-keymap "\C-j" 'yas-next-field-or-maybe-expand)
+  (define-key yas-keymap "\C-k" 'yas-prev-field)
+  (dolist (keymap (list yas-minor-mode-map yas-keymap))
+    (define-key keymap (kbd "TAB") nil)
+    (define-key keymap [(tab)] nil)))
 ; }}}
 
 ; font {{{
@@ -448,17 +468,8 @@
 (setq-default fill-column 80)
 ; }}}
 
-; TODO: use-package for language-specific stuff? `:command` looks good
 ; examples: https://github.com/SkySkimmer/.emacs.d
 ; https://www.emacswiki.org/emacs/ELPA#toc5
-; TODO: remove submodules except zenburn?
 ; TODO: tabbar, CtrlP/fzf-like things, git gutter, MRU
 ; https://www.emacswiki.org/emacs/RecentFiles
-; - https://github.com/bling/fzf.el
-; - helm?
-; https://www.emacswiki.org/emacs/RecentFiles
-; TODO: general keyword completion
-; - https://www.emacswiki.org/emacs/TabCompletion
-; TODO evil jump list is severely broken
-; - https://github.com/emacs-evil/evil/issues/1138
 ; TODO remove useless prompts like 'end of buffer', 'Text is read only', ...
