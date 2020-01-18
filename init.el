@@ -142,6 +142,8 @@
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "<SPC>") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "C-<SPC>") 'evil-scroll-up)
+(define-key evil-visual-state-map (kbd "H") 'evil-backward-char)
+(define-key evil-visual-state-map (kbd "L") 'evil-forward-char)
 
 ; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
@@ -169,8 +171,6 @@
 (evil-leader/set-leader ",")
 
 (evil-leader/set-key
-  "e" 'find-file
-  "b" 'switch-to-buffer
   "k" 'kill-buffer
   "J" 'evil-join
   "<RET>" 'evil-ex-nohighlight
@@ -249,7 +249,8 @@
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (evil-leader/set-key
-  "n n" 'neotree-toggle)
+  "n n" 'neotree-toggle
+  "n h" 'neotree-hidden-file-toggle)
 ; }}}
 
 ; undo {{{
@@ -310,6 +311,8 @@
     "p" 'coq-Print
     ";" 'pg-insert-last-output-as-comment
     "o" 'company-coq-occur))
+
+; TODO: company-keyword is in the backend list but doesn't show up in the pum
 
 ; etc  {{{
 (defun my/proof-assert-next-command ()
@@ -405,6 +408,45 @@
   (dolist (keymap (list yas-minor-mode-map yas-keymap))
     (define-key keymap (kbd "TAB") nil)
     (define-key keymap [(tab)] nil)))
+
+; M-i to insert current entry M-o: ivy-dispatching-done
+(use-package ivy :ensure t
+  :init (ivy-mode 1)
+  :config
+  (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
+  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
+  (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-alt-done)
+  (define-key ivy-minibuffer-map (kbd "<escape>") 'minibuffer-keyboard-quit)
+  (define-key ivy-minibuffer-map (kbd "C-q") 'minibuffer-keyboard-quit)
+  (define-key ivy-switch-buffer-map (kbd "C-k") 'ivy-previous-line)
+  (define-key ivy-switch-buffer-map (kbd "C-S-k") 'ivy-switch-buffer-kill)
+  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ; ivy--regex-fuzzy
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-display-style 'fancy))
+
+(use-package counsel :ensure t
+  :init (setq counsel-fzf-cmd "~/.fzf/bin/fzf -f \"%s\"")
+  :bind ("M-x" . counsel-M-x))
+
+(define-key evil-normal-state-map (kbd "C-f") 'counsel-fzf)
+(evil-leader/set-key
+  "e" 'counsel-find-file ; <BS> deletes each node
+  "b" 'ivy-switch-buffer
+  "h h" 'counsel-recentf
+  "r g" 'counsel-rg)
+
+(use-package recentf
+  :config
+  (setq recentf-save-file "~/.emacs.d/recentf")
+  (setq recentf-max-saved-items 200)
+  :hook (after-init . recentf-mode))
+
+(use-package savehist
+  :config
+  (setq savehist-file "~/.emacs.d/savehist")
+  (savehist-mode 1))
 ; }}}
 
 ; font {{{

@@ -4,4 +4,6 @@ auto-save-list/
 backup/
 .cache/
 places
+recentf
+savehist
 *.elc
