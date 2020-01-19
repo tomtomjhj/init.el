@@ -238,21 +238,6 @@
 ;}}}
 ;}}}
 
-; Neotree {{{
-(setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
-(setq neo-window-fixed-size nil)
-(setq neo-window-width 32)
-(setq neo-smart-open t)
-(setq neo-theme 'nerd)
-
-(add-to-list 'load-path "~/.emacs.d/submodules/emacs-neotree")
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-(evil-leader/set-key
-  "n n" 'neotree-toggle
-  "n h" 'neotree-hidden-file-toggle)
-; }}}
-
 ; undo {{{
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
@@ -355,6 +340,18 @@
 
 ; etc packages {{{
 ; TODO: use-package all non-submodule stuff
+(use-package neotree :ensure t
+  :init
+  (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
+  (setq neo-window-fixed-size nil)
+  (setq neo-window-width 32)
+  (setq neo-smart-open t)
+  (setq neo-theme 'nerd)
+  :config
+  (evil-leader/set-key
+    "n n" 'neotree-toggle
+    "n h" 'neotree-hidden-file-toggle))
+
 ; https://leanpub.com/markdown-mode/read
 (use-package markdown-mode :ensure t
   :mode ("\\.md\\'" . gfm-mode)
