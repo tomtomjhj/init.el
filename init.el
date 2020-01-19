@@ -356,8 +356,7 @@
 ; etc packages {{{
 ; TODO: use-package all non-submodule stuff
 ; https://leanpub.com/markdown-mode/read
-(use-package markdown-mode
-  :ensure t
+(use-package markdown-mode :ensure t
   :mode ("\\.md\\'" . gfm-mode)
   :init
   (setq markdown-command
@@ -368,19 +367,14 @@
   (setq markdown-enable-math t)
   (setq markdown-use-pandoc-style-yaml-metadata t))
 
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+(use-package editorconfig :ensure t
+  :config (editorconfig-mode 1))
 
-(use-package hl-todo
-  :ensure t
-  :init
-  (add-hook 'prog-mode-hook #'hl-todo-mode))
+(use-package hl-todo :ensure t
+  :init (add-hook 'prog-mode-hook #'hl-todo-mode))
 
 ; completion & snippets with supertab + ultisnips behavior
-(use-package company
-  :ensure t
+(use-package company :ensure t
   :config
   (setq company-idle-delay 0.2)
   (setq company-transformers
@@ -389,6 +383,7 @@
 	  company-sort-by-occurrence))
   (company-tng-configure-default)
   (evil-collection-define-key nil 'company-active-map
+    ; TODO: c-w doesn't work as expected
     (kbd "C-w") 'evil-delete-backward-word
     (kbd "<tab>") 'company-select-next
     ; '(lambda () (interactive) (company-complete-common-or-cycle -1))
@@ -399,8 +394,7 @@
   (advice-add 'company-tng--supress-post-completion :override #'ignore)
   :hook (after-init . global-company-mode))
 
-(use-package yasnippet
-  :ensure t
+(use-package yasnippet :ensure t
   :config
   (define-key yas-minor-mode-map "\C-l" 'yas-expand)
   (define-key yas-keymap "\C-j" 'yas-next-field-or-maybe-expand)
@@ -414,6 +408,7 @@
   :init (ivy-mode 1)
   :config
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
+  (define-key ivy-minibuffer-map (kbd "C-<SPC>") 'evil-insert-digraph)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
   (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-alt-done)
@@ -429,6 +424,12 @@
 (use-package counsel :ensure t
   :init (setq counsel-fzf-cmd "~/.fzf/bin/fzf -f \"%s\"")
   :bind ("M-x" . counsel-M-x))
+
+(use-package swiper :ensure t :after ivy
+  :config
+  (setq swiper-include-line-number-in-search t)
+  :bind (("C-s" . swiper-isearch)
+         ("M-s w" . swiper-thing-at-point)))
 
 (define-key evil-normal-state-map (kbd "C-f") 'counsel-fzf)
 (evil-leader/set-key
