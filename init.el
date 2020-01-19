@@ -416,6 +416,7 @@
   (define-key ivy-minibuffer-map (kbd "C-q") 'minibuffer-keyboard-quit)
   (define-key ivy-switch-buffer-map (kbd "C-k") 'ivy-previous-line)
   (define-key ivy-switch-buffer-map (kbd "C-S-k") 'ivy-switch-buffer-kill)
+  ;; ivy-reverse-isearch-map
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ; ivy--regex-fuzzy
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
@@ -448,6 +449,11 @@
   :config
   (setq savehist-file "~/.emacs.d/savehist")
   (savehist-mode 1))
+
+(use-package magit :ensure t)
+;; TODO: if I use-package evil-magit, it also downloads evil. so smart
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-magit")
+(require 'evil-magit)
 ; }}}
 
 ; font {{{

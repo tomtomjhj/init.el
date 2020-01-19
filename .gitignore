@@ -7,3 +7,4 @@ places
 recentf
 savehist
 *.elc
+transient/

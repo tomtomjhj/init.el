@@ -26,3 +26,6 @@
 [submodule "submodules/evil-snipe"]
 	path = submodules/evil-snipe
 	url = https://github.com/hlissner/evil-snipe
+[submodule "submodules/evil-magit"]
+	path = submodules/evil-magit
+	url = https://github.com/emacs-evil/evil-magit
