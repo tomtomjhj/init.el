@@ -4,7 +4,7 @@ auto-save-list/
 backup/
 .cache/
 places
-recentf
+recentf*
 savehist
 *.elc
 transient/

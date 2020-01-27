@@ -282,9 +282,16 @@
     ";" 'pg-insert-last-output-as-comment
     "o" 'company-coq-occur))
 
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(add-hook 'coq-mode-hook #'my/coq-mode-setup)
+
 ; TODO: company-keyword is in the backend list but doesn't show up in the pum
 
 ; etc  {{{
+(defun my/coq-mode-setup ()
+  (proof-definvisible coq-set-printing-notations "Set Printing Notations.")
+  (proof-definvisible coq-unset-printing-notations "Unset Printing Notations."))
+
 (defun my/proof-assert-next-command ()
   "Don't go to the next line"
   (interactive)
@@ -310,8 +317,7 @@
   (interactive)
   (my/coq-command-point "Print %s . "))
 
-(setq proof-splash-enable nil)
-(add-hook 'coq-mode-hook #'company-coq-mode)
+; (setq proof-splash-enable nil)
 
 ; TODO: C-c C-/ folding also hides empty lines for no good reason
 (put 'company-coq-fold 'disabled nil)
