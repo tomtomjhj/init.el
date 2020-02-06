@@ -279,6 +279,7 @@
     "S" 'proof-find-theorems
     "?" 'coq-Check
     "p" 'coq-Print
+    "t p" 'my/coq-toggle-printing-level
     ";" 'pg-insert-last-output-as-comment
     "o" 'company-coq-occur))
 
@@ -289,8 +290,16 @@
 
 ; etc  {{{
 (defun my/coq-mode-setup ()
-  (proof-definvisible coq-set-printing-notations "Set Printing Notations.")
-  (proof-definvisible coq-unset-printing-notations "Unset Printing Notations."))
+  (proof-definvisible my/coq-printing-1 "Set Printing Coercions. Set Printing Implicit")
+  (proof-definvisible my/coq-printing-0 "Unset Printing Coercions. Unset Printing Implicit. Unset Printing All."))
+
+(defvar my/coq-printing-level 0)
+(defun my/coq-toggle-printing-level ()
+  (interactive)
+  (cond
+   ((= my/coq-printing-level 0) (my/coq-printing-1) (setq my/coq-printing-level 1))
+   ((= my/coq-printing-level 1) (coq-set-printing-all) (setq my/coq-printing-level 2))
+   (t (my/coq-printing-0) (setq my/coq-printing-level 0))))
 
 (defun my/proof-assert-next-command ()
   "Don't go to the next line"
@@ -317,9 +326,6 @@
   (interactive)
   (my/coq-command-point "Print %s . "))
 
-; (setq proof-splash-enable nil)
-
-; TODO: C-c C-/ folding also hides empty lines for no good reason
 (put 'company-coq-fold 'disabled nil)
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
