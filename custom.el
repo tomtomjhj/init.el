@@ -15,7 +15,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
+    (eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(proof-splash-enable nil)
  '(show-paren-mode t)
  '(word-wrap t))

@@ -160,13 +160,18 @@
   "k" 'kill-buffer
   "J" 'evil-join
   "<RET>" 'evil-ex-nohighlight
-  "q" 'evil-quit
+  "q" 'my/evil-quit
+  "t t" 'eyebrowse-create-window-config
+  "`" 'eyebrowse-last-window-config
   "w" 'evil-write
   "f n" (lambda () (interactive) (message (buffer-file-name)))
   "a f" 'delete-trailing-whitespace
   "s w" 'toggle-truncate-lines
   "t i" 'electric-indent-local-mode
   )
+
+(define-key evil-normal-state-map (kbd "g t") 'eyebrowse-next-window-config)
+(define-key evil-normal-state-map (kbd "g T") 'eyebrowse-prev-window-config)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-surround")
 (require 'evil-surround)
@@ -218,6 +223,7 @@
 (define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
 (define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
 (define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
+(define-key evil-insert-state-map (kbd "C-v") 'yank)
 (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
 (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
 
@@ -448,6 +454,35 @@
 ;; TODO: if I use-package evil-magit, it also downloads evil. so smart
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-magit")
 (require 'evil-magit)
+
+(use-package eyebrowse :ensure t :demand t
+  :config
+  (setq eyebrowse-mode-line-separator " ")
+  (setq eyebrowse-new-workspace t)
+  (eyebrowse-mode t)
+  (evil-define-command my/evil-quit (&optional force)
+    :repeat nil
+    (interactive "<!>")
+    (condition-case nil
+        (delete-window)
+      (error
+       (cond ((> (length (eyebrowse--get 'window-configs)) 1)
+              (eyebrowse-close-window-config))
+             ((and (boundp 'server-buffer-clients)
+                   (fboundp 'server-edit)
+                   (fboundp 'server-buffer-done)
+                   server-buffer-clients)
+              (if force
+                  (server-buffer-done (current-buffer))
+                (server-edit)))
+             (t
+              (condition-case nil
+                  (delete-frame)
+                (error
+                 (if force
+                     (kill-emacs)
+                   (save-buffers-kill-emacs)))))))))
+  (evil-ex-define-cmd "q[uit]" 'my/evil-quit))
 ; }}}
 
 ; font {{{
