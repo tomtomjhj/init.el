@@ -32,6 +32,7 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
 (require 'use-package)
+(use-package diminish :ensure t :demand t)
 ; }}}
 
 ; themes {{{
@@ -175,8 +176,7 @@
 (require 'evil-nerd-commenter)
 (evil-leader/set-key
   "c <SPC>" 'evilnc-comment-or-uncomment-lines
-  "c c" 'evilnc-copy-and-comment-lines
-)
+  "c c" 'evilnc-copy-and-comment-lines)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-visualstar")
 (require 'evil-visualstar)
@@ -202,6 +202,7 @@
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
+(diminish 'evil-snipe-local-mode)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection) ; this requires "annalist" package
@@ -229,6 +230,7 @@
 (add-to-list 'load-path "~/.emacs.d/submodules/evil/lib")
 (require 'undo-tree)
 (global-undo-tree-mode)
+(diminish 'undo-tree-mode)
 (define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
 ; TODO: undo-tree-undo'ing in the PG locked region may break the proof
@@ -284,12 +286,14 @@
     "o" 'company-coq-occur))
 
 (add-hook 'coq-mode-hook #'company-coq-mode)
-(add-hook 'coq-mode-hook #'my/coq-mode-setup)
+(add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
 
 ; TODO: company-keyword is in the backend list but doesn't show up in the pum
 
 ; etc  {{{
 (defun my/coq-mode-setup ()
+  (diminish 'hs-minor-mode)
+  (diminish 'outline-minor-mode)
   (proof-definvisible my/coq-printing-1 "Set Printing Coercions. Set Printing Implicit")
   (proof-definvisible my/coq-printing-0 "Unset Printing Coercions. Unset Printing Implicit. Unset Printing All."))
 
@@ -368,14 +372,14 @@
   (setq markdown-enable-math t)
   (setq markdown-use-pandoc-style-yaml-metadata t))
 
-(use-package editorconfig :ensure t
+(use-package editorconfig :ensure t :diminish
   :config (editorconfig-mode 1))
 
 (use-package hl-todo :ensure t
   :init (add-hook 'prog-mode-hook #'hl-todo-mode))
 
 ; completion & snippets with supertab + ultisnips behavior
-(use-package company :ensure t
+(use-package company :ensure t :diminish
   :config
   (setq company-idle-delay 0.2)
   (setq company-transformers
@@ -395,7 +399,7 @@
   (advice-add 'company-tng--supress-post-completion :override #'ignore)
   :hook (after-init . global-company-mode))
 
-(use-package yasnippet :ensure t
+(use-package yasnippet :ensure t :diminish yas-minor-mode
   :config
   (define-key yas-minor-mode-map "\C-l" 'yas-expand)
   (define-key yas-keymap "\C-j" 'yas-next-field-or-maybe-expand)
@@ -405,7 +409,7 @@
     (define-key keymap [(tab)] nil)))
 
 ; M-i to insert current entry M-o: ivy-dispatching-done
-(use-package ivy :ensure t
+(use-package ivy :ensure t :diminish
   :init (ivy-mode 1)
   :config
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
@@ -438,18 +442,7 @@
   "e" 'counsel-find-file ; <BS> deletes each node
   "b" 'ivy-switch-buffer
   "h h" 'counsel-recentf
-  "r g" 'counsel-rg)
-
-(use-package recentf
-  :config
-  (setq recentf-save-file "~/.emacs.d/recentf")
-  (setq recentf-max-saved-items 200)
-  :hook (after-init . recentf-mode))
-
-(use-package savehist
-  :config
-  (setq savehist-file "~/.emacs.d/savehist")
-  (savehist-mode 1))
+  "G" 'counsel-rg)
 
 (use-package magit :ensure t)
 ;; TODO: if I use-package evil-magit, it also downloads evil. so smart
@@ -485,6 +478,18 @@
 ; }}}
 
 ; etc settings {{{
+(use-package recentf
+  :config
+  (setq recentf-save-file "~/.emacs.d/recentf")
+  (setq recentf-max-saved-items 200)
+  :hook (after-init . recentf-mode))
+(use-package savehist
+  :config
+  (setq savehist-file "~/.emacs.d/savehist")
+  (savehist-mode 1))
+(use-package eldoc :diminish)
+(use-package autorevert :diminish auto-revert-mode)
+
 (save-place-mode 1) ; cursor position
 (setq display-line-numbers-width-start t) ; TODO: this isn't buffer-local?
 (global-display-line-numbers-mode 1)
