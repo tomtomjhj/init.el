@@ -327,6 +327,13 @@
   (my/coq-command-point "Print %s . "))
 
 (put 'company-coq-fold 'disabled nil)
+(add-to-list 'evil-fold-list
+             '((company-coq-mode)
+               :open company-coq-unfold
+               :close company-coq-fold
+               :toggle (lambda () (company-coq-features/code-folding-toggle-block nil))
+               :open-all (lambda () (company-coq-call-compat 'outline-show-all 'show-all))
+               :close-all (lambda () (company-coq-call-compat 'outline-hide-body 'hide-body))))
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
@@ -372,9 +379,9 @@
   :config
   (setq company-idle-delay 0.2)
   (setq company-transformers
-	'(company-sort-by-backend-importance
-	  company-sort-prefer-same-case-prefix
-	  company-sort-by-occurrence))
+    '(company-sort-by-backend-importance
+      company-sort-prefer-same-case-prefix
+      company-sort-by-occurrence))
   (company-tng-configure-default)
   (evil-collection-define-key nil 'company-active-map
     ; TODO: c-w doesn't work as expected

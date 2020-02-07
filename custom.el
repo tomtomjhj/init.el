@@ -11,6 +11,7 @@
  '(custom-safe-themes
    (quote
     ("84cb38027acc22591f3215727cee5ad2f293f378bb9ebd0ba3ed0b8565436d46" default)))
+ '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
