@@ -18,6 +18,7 @@
     (eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(proof-splash-enable nil)
  '(show-paren-mode t)
+ '(show-trailing-whitespace t)
  '(word-wrap t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

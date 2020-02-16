@@ -300,6 +300,7 @@
 (defun my/coq-mode-setup ()
   (diminish 'hs-minor-mode)
   (diminish 'outline-minor-mode)
+  (load-file "~/.emacs.d/pg-ssr.el")
   (proof-definvisible my/coq-printing-1 "Set Printing Coercions. Set Printing Implicit")
   (proof-definvisible my/coq-printing-0 "Unset Printing Coercions. Unset Printing Implicit. Unset Printing All."))
 
