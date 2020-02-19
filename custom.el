@@ -19,7 +19,8 @@
  '(proof-splash-enable nil)
  '(show-paren-mode t)
  '(show-trailing-whitespace t)
- '(word-wrap t))
+ '(word-wrap t)
+ '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,6 +28,6 @@
  ;; If there is more than one, they won't work right.
  '(proof-eager-annotation-face ((t (:background "medium blue"))))
  '(proof-error-face ((t (:background "dark red"))))
- '(proof-locked-face ((t (:background "#00283c"))))
+ '(proof-locked-face ((((type tty) (min-colors 256)) (:background "#3a3a3a")) (t (:background "#00283c"))))
  '(proof-queue-face ((t (:background "#304060"))))
  '(proof-warning-face ((t (:background "indianred3")))))

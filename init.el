@@ -93,6 +93,7 @@
 (define-key minibuffer-local-map (kbd "C-r") 'evil-paste-from-register)
 (define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
 (define-key minibuffer-local-map (kbd "C-<SPC>") 'evil-insert-digraph)
+(define-key minibuffer-local-map (kbd "C-@") 'evil-insert-digraph)
 ; TODO completion in minibuffer
 
 (define-key evil-insert-state-map (kbd "C-u")
@@ -128,6 +129,7 @@
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "<SPC>") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "C-<SPC>") 'evil-scroll-up)
+(define-key evil-normal-state-map (kbd "C-@") 'evil-scroll-up)
 (define-key evil-visual-state-map (kbd "H") 'evil-backward-char)
 (define-key evil-visual-state-map (kbd "L") 'evil-forward-char)
 
@@ -223,6 +225,7 @@
 (define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
 (define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
 (define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
+(define-key evil-insert-state-map (kbd "C-@") 'evil-insert-digraph)
 (define-key evil-insert-state-map (kbd "C-v") 'yank)
 (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
 (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
@@ -255,22 +258,22 @@
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
-  (kbd "M-.") 'my/coq-Print-point
-  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-,") 'my/coq-Print-point
+  (kbd "M-.") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'normal coq-response-mode-map
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
-  (kbd "M-.") 'my/coq-Print-point
-  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-,") 'my/coq-Print-point
+  (kbd "M-.") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'normal coq-goals-mode-map
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
-  (kbd "M-.") 'my/coq-Print-point
-  (kbd "M-[") 'my/coq-Check-point
+  (kbd "M-,") 'my/coq-Print-point
+  (kbd "M-.") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
@@ -421,6 +424,7 @@
   :config
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
   (define-key ivy-minibuffer-map (kbd "C-<SPC>") 'evil-insert-digraph)
+  (define-key ivy-minibuffer-map (kbd "C-@") 'evil-insert-digraph)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
   (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-alt-done)
@@ -541,6 +545,7 @@
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq recenter-redisplay nil); https://emacs.stackexchange.com/q/47091
 
 ; http://ergoemacs.org/emacs/emacs_auto_save.html
 (setq auto-save-default nil)
