@@ -75,6 +75,7 @@
 ;; (setq evil-ex-search-persistent-highlight nil)
 ; https://github.com/syl20bnr/spacemacs/issues/8853
 (setq evil-want-abbrev-expand-on-insert-exit nil)
+(setq evil-emacs-state-cursor 'hbar)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
@@ -218,6 +219,16 @@
 (dolist (mode '(company))
   (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
 (evil-collection-init)
+
+(unless (display-graphic-p)
+  (add-to-list 'load-path "~/.emacs.d/submodules/evil-terminal-cursor-changer")
+  (require 'evil-terminal-cursor-changer)
+  ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/19
+  (setq evil-motion-state-cursor 'box
+        evil-visual-state-cursor 'box
+        evil-normal-state-cursor 'box
+        evil-insert-state-cursor 'bar)
+  (evil-terminal-cursor-changer-activate))
 ; }}}
 
 ; misc {{{
