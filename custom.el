@@ -10,15 +10,21 @@
    "\\(?:\\.\\(?:aux\\|b\\(?:bl\\|in\\|lg\\|zr/\\)\\|c\\(?:lass\\|ps?\\)\\|d\\(?:\\(?:64fs\\|fs\\|x\\(?:\\(?:32\\|64\\)fs\\)?\\)l\\)\\|elc\\|f\\(?:asl?\\|mt\\|ns?\\|\\(?:x\\(?:\\(?:32\\|64\\)f\\)\\)?sl\\)\\|g\\(?:it/\\|lob?\\|mo\\)\\|hg/\\|idx\\|kys?\\|l\\(?:bin\\|ib\\|o[ft]\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\|[ano]\\)\\|m\\(?:em\\|o\\)\\|p\\(?:64fsl\\|fsl\\|gs?\\|h[io]\\|y[co]\\)\\|s\\(?:o\\|parcf\\|vn/\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\)\\|t\\(?:fm\\|oc\\|ps?\\)\\|ufsl\\|v\\(?:rs\\|[or]\\)\\|wx\\(?:\\(?:32\\|64\\)fsl\\)\\|x86f\\|[ao]\\)\\|CVS/\\|_\\(?:\\(?:MTN\\|darcs\\)/\\)\\|~\\)")
  '(custom-safe-themes
    (quote
-    ("84cb38027acc22591f3215727cee5ad2f293f378bb9ebd0ba3ed0b8565436d46" default)))
+    ("25341750c1b06f56c0e424c3d5200fd2924248a04b063b2a38f7d48a67dfddf6" default)))
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
     (eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(proof-splash-enable nil)
+ '(safe-local-variable-values
+   (quote
+    ((eval setq coq-prog-name
+           (expand-file-name
+            (concat
+             (locate-dominating-file buffer-file-name ".dir-locals.el")
+             "_opam/bin/coqtop"))))))
  '(show-paren-mode t)
- '(show-trailing-whitespace t)
  '(word-wrap t)
  '(xterm-mouse-mode t))
 (custom-set-faces

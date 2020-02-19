@@ -72,6 +72,7 @@
 (setq evil-cross-lines t)
 ; TODO search still doesn't work like vim e.g. \w\+
 (setq evil-ex-search-vim-style-regexp t)
+;; (setq evil-ex-search-persistent-highlight nil)
 ; https://github.com/syl20bnr/spacemacs/issues/8853
 (setq evil-want-abbrev-expand-on-insert-exit nil)
 
@@ -181,6 +182,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
+(global-set-key (kbd "M-/") 'evilnc-comment-or-uncomment-lines)
 (evil-leader/set-key
   "c <SPC>" 'evilnc-comment-or-uncomment-lines
   "c c" 'evilnc-copy-and-comment-lines)
@@ -297,8 +299,6 @@
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
 
-; TODO: company-keyword is in the backend list but doesn't show up in the pum
-
 ; etc  {{{
 (defun my/coq-mode-setup ()
   (diminish 'hs-minor-mode)
@@ -386,11 +386,14 @@
   :config (editorconfig-mode 1))
 
 (use-package hl-todo :ensure t
-  :init (add-hook 'prog-mode-hook #'hl-todo-mode))
+  :init
+  (add-hook 'prog-mode-hook #'hl-todo-mode)
+  (add-hook 'markdown-mode-hook #'hl-todo-mode))
 
 ; completion & snippets with supertab + ultisnips behavior
 (use-package company :ensure t :diminish
   :config
+  (setq company-dabbrev-downcase nil)
   (setq company-idle-delay 0.2)
   (setq company-transformers
     '(company-sort-by-backend-importance
@@ -425,6 +428,7 @@
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
   (define-key ivy-minibuffer-map (kbd "C-<SPC>") 'evil-insert-digraph)
   (define-key ivy-minibuffer-map (kbd "C-@") 'evil-insert-digraph)
+  (define-key ivy-minibuffer-map (kbd "C-<RET>") 'ivy-done)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
   (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-alt-done)
@@ -545,6 +549,8 @@
 (setq mouse-wheel-progressive-speed nil)
 (setq ring-bell-function 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+(add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
 (setq recenter-redisplay nil); https://emacs.stackexchange.com/q/47091
 
 ; http://ergoemacs.org/emacs/emacs_auto_save.html
