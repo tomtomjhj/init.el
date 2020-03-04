@@ -76,6 +76,8 @@
 ; https://github.com/syl20bnr/spacemacs/issues/8853
 (setq evil-want-abbrev-expand-on-insert-exit nil)
 (setq evil-emacs-state-cursor 'hbar)
+(setq evil-vsplit-window-right t)
+(setq evil-split-window-below t)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
@@ -135,10 +137,10 @@
 (define-key evil-visual-state-map (kbd "H") 'evil-backward-char)
 (define-key evil-visual-state-map (kbd "L") 'evil-forward-char)
 
-; replace C-h with C-H
 (define-key global-map (kbd "C-S-H") 'help-command)
+(define-key global-map (kbd "M-h") 'help-command)
 
-; esc to quit everything.
+; esc and C-q to quit everything.
 (defun minibuffer-keyboard-quit ()
   (interactive)
   (if (and delete-selection-mode transient-mark-mode mark-active)
@@ -152,6 +154,14 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(define-key evil-normal-state-map (kbd "C-q") 'keyboard-quit)
+(define-key evil-visual-state-map (kbd "C-q") 'keyboard-quit)
+(define-key evil-insert-state-map (kbd "C-q") 'evil-normal-state)
+(define-key minibuffer-local-map (kbd "C-q") 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map (kbd "C-q") 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map (kbd "C-q") 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map (kbd "C-q") 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map (kbd "C-q") 'minibuffer-keyboard-quit)
 ; }}}
 
 ; evil plugins {{{
@@ -292,7 +302,6 @@
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
-(global-unset-key (kbd "M-h"))
 (dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
   (evil-leader/set-key-for-mode mode
     "l c" 'coq-LocateConstant
@@ -460,12 +469,14 @@
   (define-key ivy-minibuffer-map (kbd "<escape>") 'minibuffer-keyboard-quit)
   (define-key ivy-minibuffer-map (kbd "C-q") 'minibuffer-keyboard-quit)
   (define-key ivy-switch-buffer-map (kbd "C-k") 'ivy-previous-line)
-  (define-key ivy-switch-buffer-map (kbd "C-S-k") 'ivy-switch-buffer-kill)
   ;; ivy-reverse-isearch-map
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order))) ; ivy--regex-fuzzy
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-display-style 'fancy))
+
+(use-package projectile :ensure t
+  :config (projectile-mode +1))
 
 (use-package counsel :ensure t
   :init (setq counsel-fzf-cmd "~/.fzf/bin/fzf -f \"%s\"")
