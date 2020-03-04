@@ -312,6 +312,13 @@
 
 ; etc  {{{
 (defun my/coq-mode-setup ()
+  ;; allow some manual indentation
+  (setq indent-line-function 'indent-relative-first-indent-point)
+  (define-key evil-normal-state-map "=" 'my/evil-indent-coq)
+  (define-key evil-insert-state-map (kbd "TAB") 'smie-indent-line)
+  (setq electric-indent-inhibit t)
+  (setq tab-width 2) ; <M-i> tab-to-tab-stop
+  (setq evil-shift-width 2)
   (diminish 'hs-minor-mode)
   (diminish 'outline-minor-mode)
   (load-file "~/.emacs.d/pg-ssr.el")
@@ -350,6 +357,13 @@
 (defun my/coq-Print-point ()
   (interactive)
   (my/coq-command-point "Print %s . "))
+
+(evil-define-operator my/evil-indent-coq (beg end)
+  :move-point nil :type line
+  (let (func indent-line-function)
+    (setq indent-line-function 'smie-indent-line)
+    (evil-indent beg end)
+    (setq indent-line-function func)))
 
 (put 'company-coq-fold 'disabled nil)
 (add-to-list 'evil-fold-list
