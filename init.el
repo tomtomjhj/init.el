@@ -273,8 +273,6 @@
 ;}}}
 
 ; coq {{{
-; https://github.com/cpitclaudel/company-coq/blob/master/company-coq.el#L3278
-; Note: use <menu> for the definition of a symbol in the goal/response window
 ; Note: this can't be done with things like dolist because `-map` is variable
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
@@ -301,7 +299,10 @@
 (evil-define-key 'insert coq-mode-map
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
-  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
+  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
+  ;; Better than comment-indent-new-line as it uses indent-line-function, which
+  ;; I set to indent-relative-first-indent-point
+  (kbd "RET") 'newline-and-indent)
 (dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
   (evil-leader/set-key-for-mode mode
     "l c" 'coq-LocateConstant
@@ -328,11 +329,50 @@
   (setq electric-indent-inhibit t)
   (setq tab-width 2) ; <M-i> tab-to-tab-stop
   (setq evil-shift-width 2)
+  (setq comment-style 'multi-line)
+  (setq comment-continue "   ") ; (* ...    style comment
+                                ;    ... *) need modified comment-padright
   (diminish 'hs-minor-mode)
   (diminish 'outline-minor-mode)
   (load-file "~/.emacs.d/pg-ssr.el")
   (proof-definvisible my/coq-printing-1 "Set Printing Coercions. Set Printing Implicit")
   (proof-definvisible my/coq-printing-0 "Unset Printing Coercions. Unset Printing Implicit. Unset Printing All."))
+
+(defun comment-padright (str &optional n)
+  "Construct a string composed of STR plus `comment-padding'.
+It also adds N copies of the last non-whitespace chars of STR.
+If STR already contains padding, the corresponding amount is
+ignored from `comment-padding'.
+N defaults to 0.
+If N is `re', a regexp is returned instead, that would match
+the string for any N.
+This modified version just returns str if it's a whitespace so that
+comment-region works properly with whitespace comment-continue."
+  (setq n (or n 0))
+  (if (and (stringp str) (string-match "\\S-" str))
+      ;; Separate the actual string from any leading/trailing padding
+      (progn
+        (string-match "\\`\\s-*\\(.*?\\)\\s-*\\'" str)
+        (let ((s (match-string 1 str))    ;actual string
+              (lpad (substring str 0 (match-beginning 1))) ;left padding
+              (rpad (concat (substring str (match-end 1)) ;original right padding
+                            (substring comment-padding ;additional right padding
+                                       (min (- (match-end 0) (match-end 1))
+                                            (length comment-padding)))))
+              (multi (not (and comment-quote-nested
+                               ;; comment-end is a single char
+                               (string-match "\\`\\s-*\\S-\\s-*\\'" comment-end)))))
+          (if (not (symbolp n))
+              (concat lpad s (when multi (make-string n (aref str (1- (match-end 1))))) rpad)
+            ;; construct a regexp that would match anything from just S
+            ;; to any possible output of this function for any N.
+            (concat (mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
+                               lpad "")    ;padding is not required
+                    (regexp-quote s)
+                    (when multi "+")    ;the last char of S might be repeated
+                    (mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
+                               rpad ""))))) ;padding is not required
+    str))
 
 (defvar my/coq-printing-level 0)
 (defun my/coq-toggle-printing-level ()
