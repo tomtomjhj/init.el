@@ -302,7 +302,8 @@
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
   ;; Better than comment-indent-new-line as it uses indent-line-function, which
   ;; I set to indent-relative-first-indent-point
-  (kbd "RET") 'newline-and-indent)
+  (kbd "RET") 'newline-and-indent
+  (kbd "M-i") 'indent-relative)
 (dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
   (evil-leader/set-key-for-mode mode
     "l c" 'coq-LocateConstant
@@ -327,7 +328,6 @@
   (define-key evil-normal-state-map "=" 'my/evil-indent-coq)
   (define-key evil-insert-state-map (kbd "TAB") 'smie-indent-line)
   (setq electric-indent-inhibit t)
-  (setq tab-width 2) ; <M-i> tab-to-tab-stop
   (setq evil-shift-width 2)
   (setq comment-style 'multi-line)
   (setq comment-continue "   ") ; (* ...    style comment
