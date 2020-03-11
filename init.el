@@ -173,7 +173,7 @@
 (evil-leader/set-key
   "k" 'kill-buffer
   "J" 'evil-join
-  "<RET>" 'evil-ex-nohighlight
+  "<RET>" 'evil-ex-nohighlight ; TODO: for all windows
   "q" 'my/evil-quit
   "t t" 'eyebrowse-create-window-config
   "`" 'eyebrowse-last-window-config
@@ -330,6 +330,7 @@
   (setq electric-indent-inhibit t)
   (setq evil-shift-width 2)
   (setq comment-style 'multi-line)
+  ; TODO: don't add "   " in the empty line
   (setq comment-continue "   ") ; (* ...    style comment
                                 ;    ... *) need modified comment-padright
   (diminish 'hs-minor-mode)
@@ -568,6 +569,10 @@ comment-region works properly with whitespace comment-continue."
                      (kill-emacs)
                    (save-buffers-kill-emacs)))))))))
   (evil-ex-define-cmd "q[uit]" 'my/evil-quit))
+
+(use-package xclip :ensure t
+  :init (setq xclip-method 'xclip)
+  :config (xclip-mode 1))
 ; }}}
 
 ; font {{{
@@ -658,6 +663,7 @@ comment-region works properly with whitespace comment-continue."
         ((?< ?\\) . ?\x227c) ; ≼
         ; (⋅ cdot .P),
         ))
+(push '(?* "[*∗]") evil-snipe-aliases)
 
 (setq-default fill-column 80)
 ; }}}
