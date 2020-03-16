@@ -570,6 +570,7 @@ comment-region works properly with whitespace comment-continue."
                    (save-buffers-kill-emacs)))))))))
   (evil-ex-define-cmd "q[uit]" 'my/evil-quit))
 
+;; TODO: S L O W
 (use-package xclip :ensure t
   :init (setq xclip-method 'xclip)
   :config (xclip-mode 1))
@@ -666,10 +667,14 @@ comment-region works properly with whitespace comment-continue."
 (push '(?* "[*∗]") evil-snipe-aliases)
 
 (setq-default fill-column 80)
+
+(defun my/command-error-function (data context caller)
+  "Ignore some siginals"
+  (when (not (memq (car data) '(text-read-only beginning-of-buffer end-of-buffer)))
+    (command-error-default-function data context caller)))
+(setq command-error-function #'my/command-error-function)
 ; }}}
 
 ; examples: https://github.com/SkySkimmer/.emacs.d
 ; https://www.emacswiki.org/emacs/ELPA#toc5
-; TODO: tabbar, CtrlP/fzf-like things, git gutter, MRU
-; https://www.emacswiki.org/emacs/RecentFiles
-; TODO remove useless prompts like 'end of buffer', 'Text is read only', ...
+; TODO: tabbar (emacs 27)
