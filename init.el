@@ -273,6 +273,7 @@
 ;}}}
 
 ; coq {{{
+; mapping {{{
 ; Note: this can't be done with things like dolist because `-map` is variable
 (evil-define-key 'normal coq-mode-map
   (kbd "M-l") 'proof-goto-point
@@ -317,11 +318,9 @@
     "t p" 'my/coq-toggle-printing-level
     ";" 'pg-insert-last-output-as-comment
     "o" 'company-coq-occur))
+;}}}
 
-(add-hook 'coq-mode-hook #'company-coq-mode)
-(add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
-
-; etc  {{{
+; functions {{{
 (defun my/coq-mode-setup ()
   ;; allow some manual indentation
   (setq indent-line-function 'indent-relative-first-indent-point)
@@ -414,6 +413,11 @@ comment-region works properly with whitespace comment-continue."
     (setq indent-line-function 'smie-indent-line)
     (evil-indent beg end)
     (setq indent-line-function func)))
+; }}}
+
+; hooks, settings {{{
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
 
 (put 'company-coq-fold 'disabled nil)
 (add-to-list 'evil-fold-list
@@ -428,6 +432,10 @@ comment-region works properly with whitespace comment-continue."
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
 
 (setq-default proof-three-window-mode-policy 'hybrid)
+
+(setq coq-smie-user-tokens
+      '(("∗" . "/\\")
+        ("-∗" . "->")))
 ; }}}
 ; }}}
 
@@ -649,7 +657,7 @@ comment-region works properly with whitespace comment-continue."
 (setq make-backup-file-name-function 'my-backup-file-name)
 
 (setq evil-digraphs-table-user
-      '(((?l ?s) . ?\x2097) ; ₗ subsript l
+      '(((?_ ?l) . ?\x2097) ; ₗ subsript l
         ((?u ?l) . ?\x231c) ; ⌜ ulcorner
         ((?u ?r) . ?\x231d) ; ⌝ urcorner
         ((?m ?t) . ?\x21A6) ; ↦ mapsto
