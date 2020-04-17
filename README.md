@@ -17,7 +17,7 @@ C-x C-c
 # Note
 
 * `C-z` to enter emacs mode
-* don't do this
+* don't do this or find a way to automatically manage this
 ```
 C-u 0 M-x byte-recompile-directory <RET> ~/.emacs.d/submodules <RET>
 M-x byte-recompile-directory

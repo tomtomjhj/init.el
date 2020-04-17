@@ -125,6 +125,8 @@
 (define-key evil-motion-state-map (kbd "k") 'evil-previous-line)
 (define-key evil-normal-state-map (kbd "J") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "K") 'evil-previous-visual-line)
+(define-key evil-visual-state-map (kbd "J") 'evil-next-visual-line)
+(define-key evil-visual-state-map (kbd "K") 'evil-previous-visual-line)
 (define-key evil-normal-state-map (kbd "L") 'evil-forward-char)
 (define-key evil-normal-state-map (kbd "H") 'evil-backward-char)
 (define-key evil-motion-state-map (kbd "C-h") 'evil-window-left)
@@ -224,6 +226,15 @@
 (evil-snipe-override-mode +1)
 (diminish 'evil-snipe-local-mode)
 
+(use-package avy :ensure t)
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-easymotion")
+(require 'evil-easymotion)
+(define-key evil-snipe-parent-transient-map (kbd ";")
+  (evilem-create 'evil-snipe-repeat
+                 :bind ((evil-snipe-scope 'buffer)
+                        (evil-snipe-enable-highlight)
+                        (evil-snipe-enable-incremental-highlight))))
+
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection) ; this requires "annalist" package
 (dolist (mode '(company))
@@ -252,6 +263,8 @@
 (define-key evil-insert-state-map (kbd "C-v") 'yank)
 (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
 (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
+(define-key evil-normal-state-map (kbd "M-0")
+            (lambda () (interactive) (evil-first-non-blank) (evil-forward-word-begin)))
 
 ;}}}
 ;}}}
@@ -382,6 +395,8 @@ comment-region works properly with whitespace comment-continue."
    ((= my/coq-printing-level 1) (coq-set-printing-all) (setq my/coq-printing-level 2))
    (t (my/coq-printing-0) (setq my/coq-printing-level 0))))
 
+; TODO: make M-j,M-k :jump considering proof-end-of-locked-visible-p
+; TODO: don't repeat M-jkl with .
 (defun my/proof-assert-next-command ()
   "Don't go to the next line"
   (interactive)
@@ -435,7 +450,9 @@ comment-region works properly with whitespace comment-continue."
 
 (setq coq-smie-user-tokens
       '(("∗" . "/\\")
-        ("-∗" . "->")))
+        ("-∗" . "->")
+        ("==∗" . "->")
+        ("=∗" . "->")))
 ; }}}
 ; }}}
 
@@ -578,7 +595,8 @@ comment-region works properly with whitespace comment-continue."
                    (save-buffers-kill-emacs)))))))))
   (evil-ex-define-cmd "q[uit]" 'my/evil-quit))
 
-;; TODO: S L O W
+;; TODO: separate "+ and "", connect "+ to ssh client clipboard (ForwardX11)
+;; https://github.com/syl20bnr/spacemacs/issues/5750#issuecomment-281480406
 (use-package xclip :ensure t
   :init (setq xclip-method 'xclip)
   :config (xclip-mode 1))
