@@ -51,6 +51,7 @@
           ))
 (load-theme 'zenburn)
 ; TODO: region should override lazy-highlight
+; https://www.reddit.com/r/emacs/comments/345by9/having_the_background_face_for_selection_region/
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -181,7 +182,7 @@
   "`" 'eyebrowse-last-window-config
   "w" 'evil-write
   "f n" (lambda () (interactive) (message (buffer-file-name)))
-  "a f" 'delete-trailing-whitespace
+  "f m" 'delete-trailing-whitespace
   "s w" 'toggle-truncate-lines
   "t i" 'electric-indent-local-mode
   )
