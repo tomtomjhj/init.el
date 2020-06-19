@@ -79,15 +79,14 @@
 (setq evil-emacs-state-cursor 'hbar)
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
+; `_` isn't word char in emacs NOTE: symbol vs word
+(setq evil-symbol-word-search t)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
 (evil-mode 1)
 
-; `_` isn't word char in emacs
-(add-hook 'after-change-major-mode-hook
-          (lambda () (modify-syntax-entry ?_ "w")))
-(evil-select-search-module 'evil-search-module 'evil-search)
+(evil-select-search-module 'evil-search-module 'evil-search) ; evil-ex-search- for gn
 ; }}}
 
 ; stuff that evil should've handled {{{
@@ -204,16 +203,19 @@
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-visualstar")
 (require 'evil-visualstar)
 (global-evil-visualstar-mode)
-(defun my/star-keep-position ()
-  (interactive)
-  (evil-ex-search-word-forward)
-  (evil-ex-search-previous)) ; use (evil-search-previous) if not using evil-search
+(evil-define-motion my/star-keep-position (count &optional symbol)
+  "need this to incorporate symbol search stuff"
+  :type exclusive
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     evil-symbol-word-search))
+  (evil-ex-start-word-search nil 'forward count symbol)
+  (evil-ex-search-previous))
 (defun my/visualstar-keep-position ()
   (interactive)
   (when (region-active-p)
     (evil-visualstar/begin-search (region-beginning) (region-end) t)
     (evil-ex-search-previous)))
-(evil-global-set-key 'normal (kbd "*") 'my/star-keep-position)
+(define-key evil-motion-state-map "*" 'my/star-keep-position)
 (evil-define-key 'visual evil-visualstar-mode-map (kbd "*") 'my/visualstar-keep-position)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
@@ -700,6 +702,8 @@ comment-region works properly with whitespace comment-continue."
   (when (not (memq (car data) '(text-read-only beginning-of-buffer end-of-buffer)))
     (command-error-default-function data context caller)))
 (setq command-error-function #'my/command-error-function)
+
+(set-language-environment "UTF-8")
 ; }}}
 
 ; examples: https://github.com/SkySkimmer/.emacs.d
