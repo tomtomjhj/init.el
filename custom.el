@@ -11,7 +11,7 @@
    "\\(?:\\.\\(?:aux\\|b\\(?:bl\\|in\\|lg\\|zr/\\)\\|c\\(?:lass\\|ps?\\)\\|d\\(?:\\(?:64fs\\|fs\\|x\\(?:\\(?:32\\|64\\)fs\\)?\\)l\\)\\|elc\\|f\\(?:asl?\\|mt\\|ns?\\|\\(?:x\\(?:\\(?:32\\|64\\)f\\)\\)?sl\\)\\|g\\(?:it/\\|lob?\\|mo\\)\\|hg/\\|idx\\|kys?\\|l\\(?:bin\\|ib\\|o[ft]\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\|[ano]\\)\\|m\\(?:em\\|o\\)\\|p\\(?:64fsl\\|fsl\\|gs?\\|h[io]\\|y[co]\\)\\|s\\(?:o\\|parcf\\|vn/\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\)\\|t\\(?:fm\\|oc\\|ps?\\)\\|ufsl\\|v\\(?:rs\\|[or]\\)\\|wx\\(?:\\(?:32\\|64\\)fsl\\)\\|x86f\\|[ao]\\)\\|CVS/\\|_\\(?:\\(?:MTN\\|darcs\\)/\\)\\|~\\)")
  '(custom-safe-themes
    (quote
-    ("32ba8657cf1526d343050fb3b4a842bb84f3ec70d9409bd0a64971f23a92ec21" default)))
+    ("0f0a885f4ce5b6f97e33c7483bfe4515220e9cbd9ab3ca798e0972f665f8ee4d" default)))
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
@@ -33,8 +33,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(avy-lead-face ((t (:foreground "#1c1c1c" :background "#f0e" :weight bold))))
+ '(evil-snipe-first-match-face ((t (:foreground "#1c1c1c" :background "#ffffff" :inverse-video t :weight bold))))
+ '(evil-snipe-matches-face ((t (:foreground "#1c1c1c" :background "#afff00" :weight bold))))
+ '(font-lock-comment-delimiter-face ((t (:foreground "#afd7af"))))
+ '(font-lock-comment-face ((t (:foreground "#afd7af"))))
+ '(font-lock-constant-face ((t (:foreground "#afd75f"))))
+ '(isearch ((t (:foreground nil :inverse-video t :weight bold :underline t))))
+ '(lazy-highlight ((t (:foreground nil :background "#444444" :weight bold :underline t))))
+ '(line-number ((t (:foreground "#757565" :background "#1c1c1c"))))
  '(proof-eager-annotation-face ((t (:background "medium blue"))))
  '(proof-error-face ((t (:background "dark red"))))
- '(proof-locked-face ((((type tty) (min-colors 256)) (:background "#3a3a3a")) (t (:background "#00283c"))))
+ '(proof-locked-face ((t (:background "#3a3a3a"))))
  '(proof-queue-face ((t (:background "#304060"))))
- '(proof-warning-face ((t (:background "indianred3")))))
+ '(proof-warning-face ((t (:background "indianred3"))))
+ '(region ((t (:background "#626262" :extend t)))))

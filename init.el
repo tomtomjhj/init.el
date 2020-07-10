@@ -37,6 +37,7 @@
 
 ; themes {{{
 ; NOTE: hardcoded colors for region(block) and lazy-highlight(search)
+; TODO: remove submodule
 (add-to-list 'custom-theme-load-path "~/.emacs.d/submodules/zenburn")
 (setq zenburn-override-colors-alist
         '(("zenburn-fg+1"     . "#FFFFEF")
@@ -52,6 +53,9 @@
 (load-theme 'zenburn)
 ; TODO: region should override lazy-highlight
 ; https://www.reddit.com/r/emacs/comments/345by9/having_the_background_face_for_selection_region/
+; NOTE:
+; * isearch, lazy-highlight: uses zenburn yellow if `:foreground nil` is not specified
+; * line-number: match zenburn-fg-1 zenburn-bg
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -86,10 +90,13 @@
 (require 'evil)
 (evil-mode 1)
 
+(add-hook 'after-change-major-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
 (evil-select-search-module 'evil-search-module 'evil-search) ; evil-ex-search- for gn
 ; }}}
 
 ; stuff that evil should've handled {{{
+; TODO: make word motions symbol-wise
 ; NOTE: Do not (setq evil-want-minibuffer t)
 ; This option makes the minibuffer work like a normal vim window. ESC exits the
 ; insert mode of the minibuffer window instead of exiting the minibuffer.
@@ -138,6 +145,9 @@
 (define-key evil-normal-state-map (kbd "C-@") 'evil-scroll-up)
 (define-key evil-visual-state-map (kbd "H") 'evil-backward-char)
 (define-key evil-visual-state-map (kbd "L") 'evil-forward-char)
+
+(define-key evil-window-map "q" 'my/evil-quit)
+(define-key evil-window-map "\C-q" 'my/evil-quit)
 
 (define-key global-map (kbd "C-S-H") 'help-command)
 (define-key global-map (kbd "M-h") 'help-command)
@@ -219,8 +229,8 @@
 (evil-define-key 'visual evil-visualstar-mode-map (kbd "*") 'my/visualstar-keep-position)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
-(setq evil-snipe-scope 'whole-buffer)
-(setq evil-snipe-repeat-scope 'whole-buffer)
+(setq evil-snipe-scope 'buffer)
+(setq evil-snipe-repeat-scope 'buffer)
 (setq evil-snipe-smart-case t)
 ; TODO: `,`, mappping overrides <leader> in snipe state(?)
 ; TODO: direction
@@ -575,6 +585,7 @@ comment-region works properly with whitespace comment-continue."
   (setq eyebrowse-new-workspace t)
   (eyebrowse-mode t)
   (evil-define-command my/evil-quit (&optional force)
+    "eyebrowse-aware evil-quit."
     :repeat nil
     (interactive "<!>")
     (condition-case nil
@@ -684,13 +695,14 @@ comment-region works properly with whitespace comment-continue."
         ((?m ?t) . ?\x21A6) ; ↦ mapsto
         ((?| ?-) . ?\x22A2) ; ⊢ vdash
         ((?- ?|) . ?\x22A3) ; ⊣ dashv
-        ((?i ?n) . ?\x2208) ; ∈ in
         ((?* ?*) . ?\x2217) ; ∗ ast
         ((?t ?r) . ?\x25b7) ; ▷ Tr
         ((?o ?s) . ?\x25a1) ; □ OS
         ((?o ?o) . ?\x25cf) ; ● (0M)
         ((?O ?O) . ?\x25ef) ; ◯ (cf. ○ 0m)
         ((?< ?\\) . ?\x227c) ; ≼
+        ((?t ?p) . ?\x22a4) ; ⊤
+        ((?b ?t) . ?\x22a5) ; ⊥
         ; (⋅ cdot .P),
         ))
 (push '(?* "[*∗]") evil-snipe-aliases)
