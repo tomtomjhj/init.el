@@ -18,6 +18,49 @@
    (quote
     (vimish-fold avy xclip projectile diminish eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(proof-splash-enable nil)
+ '(proof-universal-keys
+   (quote
+    (([(control c)
+       96]
+      . proof-next-error)
+     ([(control c)
+       (control c)]
+      . proof-interrupt-process)
+     ([(control c)
+       (control n)]
+      . proof-assert-next-command-interactive)
+     ([(control c)
+       (control u)]
+      . proof-undo-last-successful-command)
+     ([(control c)
+       (control p)]
+      . proof-prf)
+     ([(control c)
+       (control l)]
+      . proof-layout-windows)
+     ([(control c)
+       (control x)]
+      . proof-shell-exit)
+     ([(control c)
+       (control v)]
+      . proof-minibuffer-cmd)
+     ([(control c)
+       (control w)]
+      . pg-response-clear-displays)
+     ([(control c)
+       (control 46)]
+      . proof-goto-end-of-locked)
+     ([(control c)
+       46]
+      . proof-goto-end-of-locked)
+     ([(control c)
+       (control f)]
+      . proof-find-theorems)
+     ([(control c)
+       (control o)]
+      . proof-display-some-buffers)
+     ([(control shift mouse-1)]
+      . pg-identifier-under-mouse-query))))
  '(safe-local-variable-values
    (quote
     ((eval setq coq-prog-name

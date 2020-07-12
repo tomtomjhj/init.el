@@ -309,6 +309,7 @@
 ; coq {{{
 ; mapping {{{
 ; Note: this can't be done with things like dolist because `-map` is variable
+; C-c C-. proof-goto-end-of-locked
 (evil-define-key 'normal coq-mode-map
   (kbd "C-c C-_") 'company-coq-fold
   (kbd "M-l") 'proof-goto-point
@@ -417,8 +418,6 @@ comment-region works properly with whitespace comment-continue."
    ((= my/coq-printing-level 1) (coq-set-printing-all) (setq my/coq-printing-level 2))
    (t (my/coq-printing-0) (setq my/coq-printing-level 0))))
 
-; TODO: make M-j,M-k :jump considering proof-end-of-locked-visible-p
-; TODO: don't repeat M-jkl with .
 (defun my/proof-assert-next-command ()
   "Don't go to the next line"
   (interactive)
@@ -468,6 +467,12 @@ comment-region works properly with whitespace comment-continue."
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
+(evil-add-command-properties #'proof-goto-end-of-locked :jump t)
+; TODO: make M-j/k :jump considering proof-end-of-locked-visible-p or error
+; don't repeat proof stuff with `.`. TODO: apply to all?
+(evil-declare-not-repeat #'my/proof-assert-next-command)
+(evil-declare-not-repeat #'proof-undo-last-successful-command)
+(evil-declare-not-repeat #'proof-goto-point)
 
 (setq-default proof-three-window-mode-policy 'hybrid)
 
