@@ -36,7 +36,6 @@
 ; }}}
 
 ; themes {{{
-; NOTE: hardcoded colors for region(block) and lazy-highlight(search)
 ; TODO: remove submodule
 (add-to-list 'custom-theme-load-path "~/.emacs.d/submodules/zenburn")
 (setq zenburn-override-colors-alist
@@ -128,8 +127,8 @@
 (define-key evil-motion-state-map [triple-mouse-7] 'silence)
 (define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
-(define-key evil-motion-state-map (kbd "j") 'evil-next-line)
-(define-key evil-motion-state-map (kbd "k") 'evil-previous-line)
+(define-key evil-motion-state-map (kbd "j") 'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "k") 'evil-previous-visual-line)
 (define-key evil-normal-state-map (kbd "J") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "K") 'evil-previous-visual-line)
 (define-key evil-visual-state-map (kbd "J") 'evil-next-visual-line)
@@ -205,6 +204,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
+; NOTE: M-;
 (global-set-key (kbd "M-/") 'evilnc-comment-or-uncomment-lines)
 (evil-leader/set-key
   "c <SPC>" 'evilnc-comment-or-uncomment-lines
@@ -233,7 +233,6 @@
 (setq evil-snipe-repeat-scope 'buffer)
 (setq evil-snipe-smart-case t)
 ; TODO: `,`, mappping overrides <leader> in snipe state(?)
-; TODO: direction
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
@@ -311,6 +310,7 @@
 ; Note: this can't be done with things like dolist because `-map` is variable
 ; C-c C-. proof-goto-end-of-locked
 (evil-define-key 'normal coq-mode-map
+  "=" 'my/evil-indent-coq
   (kbd "C-c C-_") 'company-coq-fold
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
@@ -334,6 +334,7 @@
   (kbd "M-.") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
+  (kbd "TAB") 'smie-indent-line
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
@@ -360,8 +361,6 @@
 (defun my/coq-mode-setup ()
   ;; allow some manual indentation
   (setq indent-line-function 'indent-relative-first-indent-point)
-  (define-key evil-normal-state-map "=" 'my/evil-indent-coq)
-  (define-key evil-insert-state-map (kbd "TAB") 'smie-indent-line)
   (setq electric-indent-inhibit t)
   (setq evil-shift-width 2)
   (setq comment-style 'multi-line)

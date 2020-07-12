@@ -12,6 +12,14 @@
  '(custom-safe-themes
    (quote
     ("0f0a885f4ce5b6f97e33c7483bfe4515220e9cbd9ab3ca798e0972f665f8ee4d" default)))
+ '(evil-goto-definition-functions (quote (evil-goto-definition-search)))
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "color-218")
+     ("NOTE" . "color-218")
+     ("HACK" . "color-218")
+     ("FIXME" . "color-218")
+     ("XXX+" . "color-218"))))
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
@@ -82,9 +90,13 @@
  '(font-lock-comment-delimiter-face ((t (:foreground "#afd7af"))))
  '(font-lock-comment-face ((t (:foreground "#afd7af"))))
  '(font-lock-constant-face ((t (:foreground "#afd75f"))))
+ '(hl-todo ((t (:foreground "color-218" :inverse-video t :weight bold))))
  '(isearch ((t (:foreground nil :inverse-video t :weight bold :underline t))))
  '(lazy-highlight ((t (:foreground nil :background "#444444" :weight bold :underline t))))
  '(line-number ((t (:foreground "#757565" :background "#1c1c1c"))))
+ '(markdown-code-face ((t (:inherit fixed-pitch :foreground "color-224"))))
+ '(markdown-inline-code-face ((t (:inherit markdown-code-face))))
+ '(markdown-pre-face ((t (:inherit markdown-code-face))))
  '(proof-eager-annotation-face ((t (:background "medium blue"))))
  '(proof-error-face ((t (:background "dark red"))))
  '(proof-locked-face ((t (:background "#3a3a3a"))))
