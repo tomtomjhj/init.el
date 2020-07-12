@@ -263,6 +263,14 @@
         evil-normal-state-cursor 'box
         evil-insert-state-cursor 'bar)
   (evil-terminal-cursor-changer-activate))
+
+; folding
+(use-package vimish-fold :ensure t)
+(add-to-list 'load-path "~/.emacs.d/submodules/evil-vimish-fold")
+(setq evil-vimish-fold-target-modes '(prog-mode conf-mode text-mode coq-mode))
+(require 'evil-vimish-fold)
+(global-evil-vimish-fold-mode 1)
+(diminish 'evil-vimish-fold-mode)
 ; }}}
 
 ; misc {{{
@@ -302,6 +310,7 @@
 ; mapping {{{
 ; Note: this can't be done with things like dolist because `-map` is variable
 (evil-define-key 'normal coq-mode-map
+  (kbd "C-c C-_") 'company-coq-fold
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
@@ -448,13 +457,14 @@ comment-region works properly with whitespace comment-continue."
 (add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
 
 (put 'company-coq-fold 'disabled nil)
-(add-to-list 'evil-fold-list
-             '((company-coq-mode)
-               :open company-coq-unfold
-               :close company-coq-fold
-               :toggle (lambda () (company-coq-features/code-folding-toggle-block nil))
-               :open-all (lambda () (company-coq-call-compat 'outline-show-all 'show-all))
-               :close-all (lambda () (company-coq-call-compat 'outline-hide-body 'hide-body))))
+; S-tab, C-c C-/, C-c C-\
+; (add-to-list 'evil-fold-list
+;              '((company-coq-mode)
+;                :open company-coq-unfold
+;                :close company-coq-fold
+;                :toggle (lambda () (company-coq-features/code-folding-toggle-block nil))
+;                :open-all (lambda () (company-coq-call-compat 'outline-show-all 'show-all))
+;                :close-all (lambda () (company-coq-call-compat 'outline-hide-body 'hide-body))))
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)

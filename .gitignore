@@ -2,6 +2,7 @@ elpa/
 undo/
 auto-save-list/
 backup/
+vimish-fold/
 .cache/
 places
 recentf*

@@ -32,3 +32,6 @@
 [submodule "submodules/evil-easymotion"]
 	path = submodules/evil-easymotion
 	url = https://github.com/PythonNut/evil-easymotion
+[submodule "submodules/evil-vimish-fold"]
+	path = submodules/evil-vimish-fold
+	url = https://github.com/alexmurray/evil-vimish-fold
