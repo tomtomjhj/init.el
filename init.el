@@ -264,6 +264,7 @@
   (evil-terminal-cursor-changer-activate))
 
 ; folding
+; NOTE: doesn't support nest folded
 (use-package vimish-fold :ensure t)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-vimish-fold")
 (setq evil-vimish-fold-target-modes '(prog-mode conf-mode text-mode coq-mode))
@@ -311,7 +312,8 @@
 ; C-c C-. proof-goto-end-of-locked
 (evil-define-key 'normal coq-mode-map
   "=" 'my/evil-indent-coq
-  (kbd "C-c C-_") 'company-coq-fold
+  ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
+  (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
   (kbd "M-l") 'proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
@@ -455,14 +457,6 @@ comment-region works properly with whitespace comment-continue."
 (add-hook 'company-coq-mode-hook #'my/coq-mode-setup)
 
 (put 'company-coq-fold 'disabled nil)
-; S-tab, C-c C-/, C-c C-\
-; (add-to-list 'evil-fold-list
-;              '((company-coq-mode)
-;                :open company-coq-unfold
-;                :close company-coq-fold
-;                :toggle (lambda () (company-coq-features/code-folding-toggle-block nil))
-;                :open-all (lambda () (company-coq-call-compat 'outline-show-all 'show-all))
-;                :close-all (lambda () (company-coq-call-compat 'outline-hide-body 'hide-body))))
 
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)

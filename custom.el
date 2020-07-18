@@ -102,4 +102,5 @@
  '(proof-locked-face ((t (:background "#3a3a3a"))))
  '(proof-queue-face ((t (:background "#304060"))))
  '(proof-warning-face ((t (:background "indianred3"))))
- '(region ((t (:background "#626262" :extend t)))))
+ '(region ((t (:background "#626262" :extend t))))
+ '(vimish-fold-overlay ((t (:inherit highlight :inverse-video t :weight bold)))))
