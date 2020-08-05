@@ -314,13 +314,14 @@
   "=" 'my/evil-indent-coq
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
-  (kbd "M-l") 'proof-goto-point
+  (kbd "M-l") 'company-coq-proof-goto-point
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
   (kbd "M-,") 'my/coq-Print-point
   (kbd "M-.") 'my/coq-Check-point
-  (kbd "M-]") 'company-coq-jump-to-definition)
+  (kbd "M-]") 'company-coq-jump-to-definition
+  (kbd "C-w M-]") (lambda () (interactive) (evil-window-split) (company-coq-jump-to-definition (company-coq-symbol-at-point-with-error))))
 (evil-define-key 'normal coq-response-mode-map
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
@@ -337,7 +338,7 @@
   (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
   (kbd "TAB") 'smie-indent-line
-  (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
+  (kbd "M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
   ;; Better than comment-indent-new-line as it uses indent-line-function, which
@@ -436,6 +437,7 @@ comment-region works properly with whitespace comment-continue."
     (proof-shell-ready-prover)
     (proof-shell-invisible-command (format (concat cmd) (car sb-pos)))))
 
+;; TODO don't move cursor in goal/info window
 (defun my/coq-Check-point ()
   (interactive)
   (my/coq-command-point "Check %s . "))
@@ -461,11 +463,12 @@ comment-region works properly with whitespace comment-continue."
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
 (evil-add-command-properties #'proof-goto-end-of-locked :jump t)
+
 ; TODO: make M-j/k :jump considering proof-end-of-locked-visible-p or error
-; don't repeat proof stuff with `.`. TODO: apply to all?
+; don't repeat proof stuff with `.`.
 (evil-declare-not-repeat #'my/proof-assert-next-command)
 (evil-declare-not-repeat #'proof-undo-last-successful-command)
-(evil-declare-not-repeat #'proof-goto-point)
+(evil-declare-not-repeat #'company-coq-proof-goto-point)
 
 (setq-default proof-three-window-mode-policy 'hybrid)
 
@@ -486,8 +489,9 @@ comment-region works properly with whitespace comment-continue."
 
         ;; Extra symbols
         (">->" . ?↣)
-        ("-->" . ?⟶) ("<--" . ?⟵) ("<-->" . ?⟷)
-        ("==>" . ?⟹) ("<==" . ?⟸) ("~~>" . ?⟿) ("<~~" . ?⬳)))
+        ;("-->" . ?⟶) ("<--" . ?⟵) ("<-->" . ?⟷)
+        ;("==>" . ?⟹) ("<==" . ?⟸) ("~~>" . ?⟿) ("<~~" . ?⬳)
+        ))
 ; }}}
 ; }}}
 
