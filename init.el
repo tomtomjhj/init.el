@@ -193,6 +193,7 @@
   "f m" 'delete-trailing-whitespace
   "s w" 'toggle-truncate-lines
   "t i" 'electric-indent-local-mode
+  "i c" 'my/toggle-evil-ex-search-case
   )
 
 (define-key evil-normal-state-map (kbd "g t") 'eyebrowse-next-window-config)
@@ -287,6 +288,11 @@
 (define-key evil-normal-state-map (kbd "M-0")
             (lambda () (interactive) (evil-first-non-blank) (evil-forward-word-begin)))
 
+(defun my/toggle-evil-ex-search-case ()
+  (interactive)
+  (cond
+   ((eq evil-ex-search-case 'smart) (setq evil-ex-search-case 'sensitive))
+   ((eq evil-ex-search-case 'sensitive) (setq evil-ex-search-case 'smart))))
 ;}}}
 ;}}}
 
@@ -308,6 +314,7 @@
 
 ; coq {{{
 ; mapping {{{
+; TODO: https://proofgeneral.github.io/doc/master/userman/Coq-Proof-General/#Showing-Proof-Diffs
 ; Note: this can't be done with things like dolist because `-map` is variable
 ; C-c C-. proof-goto-end-of-locked
 (evil-define-key 'normal coq-mode-map
@@ -370,6 +377,7 @@
   ; TODO: don't add "   " in the empty line
   (setq comment-continue "   ") ; (* ...    style comment
                                 ;    ... *) need modified comment-padright
+  (setq vimish-fold-marks '("<!--" . "-->"))
   (diminish 'hs-minor-mode)
   (diminish 'outline-minor-mode)
   (load-file "~/.emacs.d/pg-ssr.el")
@@ -499,7 +507,7 @@ comment-region works properly with whitespace comment-continue."
 ; TODO: use-package all non-submodule stuff
 (use-package neotree :ensure t
   :init
-  (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo$" "\\.v\\.d$" "\\.glob$"))
+  (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo[sk]?$" "\\.v\\.d$" "\\.glob$"))
   (setq neo-window-fixed-size nil)
   (setq neo-window-width 32)
   (setq neo-smart-open t)
