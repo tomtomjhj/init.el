@@ -173,6 +173,7 @@
 (define-key minibuffer-local-completion-map (kbd "C-q") 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map (kbd "C-q") 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map (kbd "C-q") 'minibuffer-keyboard-quit)
+(define-key evil-ex-completion-map (kbd "C-q") 'minibuffer-keyboard-quit) ; https://emacs.stackexchange.com/a/14165
 ; }}}
 
 ; evil plugins {{{
@@ -694,6 +695,7 @@ comment-region works properly with whitespace comment-continue."
 (setq display-line-numbers-width-start t) ; TODO: this isn't buffer-local?
 (global-display-line-numbers-mode 1)
 (electric-pair-mode 1)
+(setq electric-pair-inhibit-predicate `(lambda (char) (minibufferp)))
 (setq column-number-mode t)
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
   (tool-bar-mode -1))
