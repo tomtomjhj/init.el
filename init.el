@@ -22,6 +22,8 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 (require 'cl) ; lexcial-let
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -569,6 +571,19 @@ comment-region works properly with whitespace comment-continue."
     (define-key keymap (kbd "TAB") nil)
     (define-key keymap [(tab)] nil)))
 
+(use-package fzf
+  :config
+  ;; https://github.com/bling/fzf.el/issues/1
+  (add-hook 'term-mode-hook 'evil-emacs-state)
+  (add-hook 'term-mode-hook #'disable-scroll-margin)
+  (defadvice fzf/start (after normalize-fzf-mode-line activate)
+    (face-remap-add-relative 'mode-line '(:box nil)))
+  (defun disable-scroll-margin ()
+    (setq-local scroll-margin 0))
+  (defadvice fzf/start (after normalize-fzf-mode-line activate)
+    (setq mode-line-format nil))
+  (evil-leader/set-key "G" 'fzf-ripgrep))
+
 ; M-i to insert current entry M-o: ivy-dispatching-done
 (use-package ivy :ensure t :diminish
   :init (ivy-mode 1)
@@ -606,8 +621,7 @@ comment-region works properly with whitespace comment-continue."
 (evil-leader/set-key
   "e" 'counsel-find-file ; <BS> deletes each node
   "b" 'ivy-switch-buffer
-  "h h" 'counsel-recentf
-  "G" 'counsel-rg)
+  "h h" 'counsel-recentf)
 
 (use-package magit :ensure t)
 ;; TODO: if I use-package evil-magit, it also downloads evil. so smart
