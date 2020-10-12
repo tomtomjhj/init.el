@@ -268,7 +268,8 @@
   (interactive "srg: ")
   (let ((d (fzf/resolve-directory directory)))
     (fzf-with-command
-     (format "rg --column --line-number --no-heading --fixed-strings --ignore-case --follow --glob \"!.git/*\" --color \"never\" %s ." search)
+     (format "rg --column --line-number --no-heading --smart-case --follow %s ." search)
+     ; TODO: <q-args> → shellescape(a:query)
      (lambda (x)
        (let* ((parts (split-string x ":"))
               (f (expand-file-name (nth 0 parts) d)))

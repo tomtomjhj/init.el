@@ -187,7 +187,7 @@
 (evil-leader/set-key
   "k" 'kill-buffer
   "J" 'evil-join
-  "<RET>" 'evil-ex-nohighlight ; TODO: for all windows
+  "<RET>" 'evil-ex-nohighlight
   "q" 'my/evil-quit
   "t t" 'eyebrowse-create-window-config
   "`" 'eyebrowse-last-window-config
@@ -377,7 +377,8 @@
   (setq electric-indent-inhibit t)
   (setq evil-shift-width 2)
   (setq comment-style 'multi-line)
-  ; TODO: don't add "   " in the empty line
+  ; TODO: Don't add "   " in the empty line.
+  ; If the "   " is removed, then uncomment fails to un-indent the text below the empty line.
   (setq comment-continue "   ") ; (* ...    style comment
                                 ;    ... *) need modified comment-padright
   (setq vimish-fold-marks '("<!--" . "-->"))
@@ -507,7 +508,6 @@ comment-region works properly with whitespace comment-continue."
 ; }}}
 
 ; etc packages {{{
-; TODO: use-package all non-submodule stuff
 (use-package neotree :ensure t
   :init
   (setq neo-hidden-regexp-list '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "\\.vo[sk]?$" "\\.v\\.d$" "\\.glob$"))
@@ -552,6 +552,7 @@ comment-region works properly with whitespace comment-continue."
   (company-tng-configure-default)
   (evil-collection-define-key nil 'company-active-map
     ; TODO: c-w doesn't work as expected
+    ; TODO: how to use company-dabbrev?
     (kbd "C-w") 'evil-delete-backward-word
     (kbd "<tab>") 'company-select-next
     ; '(lambda () (interactive) (company-complete-common-or-cycle -1))
@@ -706,7 +707,7 @@ comment-region works properly with whitespace comment-continue."
 (use-package autorevert :diminish auto-revert-mode)
 
 (save-place-mode 1) ; cursor position
-(setq display-line-numbers-width-start t) ; TODO: this isn't buffer-local?
+(setq display-line-numbers-width-start t)
 (global-display-line-numbers-mode 1)
 (electric-pair-mode 1)
 (setq electric-pair-inhibit-predicate `(lambda (char) (minibufferp)))
@@ -760,7 +761,6 @@ comment-region works properly with whitespace comment-continue."
         ((?< ?\\) . ?≼)
         ((?t ?p) . ?⊤)
         ((?b ?t) . ?⊥)
-        ; (⋅ cdot .P),
         ))
 (push '(?* "[*∗]") evil-snipe-aliases)
 

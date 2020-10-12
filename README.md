@@ -33,6 +33,17 @@ U
 x
 ```
 
+# Tips
+* Fixing "xclip error can't open display" without exiting emacs: Open another term and get `$DISPLAY`, then `M-x setenv`.
+    * This probably happens when disconnecting from ssh session hangs.
+
 # TODO
-* rebase jumplist-squash onto 1.14.0
+* rebase jumplist-squash to latest evil master
+    * note: undo-tree is now optional dependency https://github.com/emacs-evil/evil/pull/1360
+* use-package works fine with submodules. Don't put `:ensure` and configure `load-path`.
 * apropos?
+* https://depp.brause.cc/dotemacs/
+* company coq folding broken: `. ` inside comment is not ignored
+  ```coq
+  Definition a := (* asdf. *) 1.
+  ```
