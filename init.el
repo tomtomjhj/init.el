@@ -179,6 +179,9 @@
 ; }}}
 
 ; evil plugins {{{
+(add-to-list 'load-path "~/.emacs.d/submodules/goto-chg")
+(require 'goto-chg)
+
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-leader")
 (require 'evil-leader)
 (global-evil-leader-mode)

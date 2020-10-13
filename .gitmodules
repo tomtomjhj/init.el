@@ -35,3 +35,6 @@
 [submodule "submodules/evil-vimish-fold"]
 	path = submodules/evil-vimish-fold
 	url = https://github.com/alexmurray/evil-vimish-fold
+[submodule "submodules/goto-chg"]
+	path = submodules/goto-chg
+	url = https://github.com/emacs-evil/goto-chg
