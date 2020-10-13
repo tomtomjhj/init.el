@@ -661,9 +661,16 @@ comment-region works properly with whitespace comment-continue."
 
 ;; TODO: separate "+ and "", connect "+ to ssh client clipboard (ForwardX11)
 ;; https://github.com/syl20bnr/spacemacs/issues/5750#issuecomment-281480406
+;; Current setup partially works but has some flaws:
+;; * yanking to "+ also overrides ""
+;; * Pasting a line from "+ which is yanked in visual-line mode is not linewise
+;;   paste (pasting from "" (which is yanked as a side-effect) works fine)
+;; * the content of "+ of :reg command output is not syntax highlighted
 (use-package xclip :ensure t
   :init (setq xclip-method 'xclip)
-  :config (xclip-mode 1))
+  :config
+  (xclip-mode 1)
+  (setq select-enable-clipboard nil))
 ; }}}
 
 ; font {{{
