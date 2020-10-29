@@ -36,6 +36,8 @@ x
 # Tips
 * Fixing "xclip error can't open display" without exiting emacs: Open another term and get `$DISPLAY`, then `M-x setenv`.
     * This probably happens when disconnecting from ssh session hangs.
+* `previous-complete-history-element` doesn't put cursor on the last char because it gets history element which completes the minibuffer before the point. Just use `C-e`.
+* `toggle-debug-on-error` → how to use this?
 
 # TODO
 * rebase jumplist-squash to latest evil master
@@ -47,3 +49,5 @@ x
   ```coq
   Definition a := (* asdf. *) 1.
   ```
+* take stuff from https://github.com/hlissner/doom-emacs/tree/develop/modules/editor/evil
+* doom's jump https://github.com/hlissner/doom-emacs/issues/2422

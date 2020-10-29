@@ -289,6 +289,7 @@
 (define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
 (define-key evil-insert-state-map (kbd "C-@") 'evil-insert-digraph)
 (define-key evil-insert-state-map (kbd "C-v") 'yank)
+(define-key evil-visual-state-map (kbd "M-y") (kbd "\"+y"))
 (define-key evil-normal-state-map (kbd "M-o") 'evil-jump-backward)
 (define-key evil-normal-state-map (kbd "M-i") 'evil-jump-forward)
 (define-key evil-normal-state-map (kbd "M-0")
@@ -382,6 +383,8 @@
   (setq comment-style 'multi-line)
   ; TODO: Don't add "   " in the empty line.
   ; If the "   " is removed, then uncomment fails to un-indent the text below the empty line.
+  ; TODO: https://github.com/emacs-evil/evil/issues/606
+  ; Rollback these and fix evil-join? Does gq work properly?
   (setq comment-continue "   ") ; (* ...    style comment
                                 ;    ... *) need modified comment-padright
   (setq vimish-fold-marks '("<!--" . "-->"))
@@ -618,7 +621,7 @@ comment-region works properly with whitespace comment-continue."
 (use-package swiper :ensure t :after ivy
   :config
   (setq swiper-include-line-number-in-search t)
-  :bind (("C-s" . swiper-isearch)
+  :bind (("M-s M-s" . swiper-isearch)
          ("M-s w" . swiper-thing-at-point)))
 
 (define-key evil-normal-state-map (kbd "C-f") 'counsel-fzf)
@@ -674,6 +677,9 @@ comment-region works properly with whitespace comment-continue."
   :config
   (xclip-mode 1)
   (setq select-enable-clipboard nil))
+
+; TODO https://github.com/akermu/emacs-libvterm something's broken
+; (use-package vterm :ensure t)
 ; }}}
 
 ; font {{{
