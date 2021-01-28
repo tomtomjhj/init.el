@@ -328,9 +328,9 @@
   "=" 'my/evil-indent-coq
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
-  (kbd "M-l") 'company-coq-proof-goto-point
-  (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'my/proof-assert-next-command
+  (kbd "C-M-l") 'company-coq-proof-goto-point
+  (kbd "C-M-k") 'proof-undo-last-successful-command
+  (kbd "C-M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
   (kbd "M-,") 'my/coq-Print-point
   (kbd "M-.") 'my/coq-Check-point

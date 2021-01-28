@@ -51,3 +51,4 @@ x
   ```
 * take stuff from https://github.com/hlissner/doom-emacs/tree/develop/modules/editor/evil
 * doom's jump https://github.com/hlissner/doom-emacs/issues/2422
+    * use better-jumper
