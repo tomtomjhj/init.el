@@ -23,9 +23,6 @@
 [submodule "submodules/evil-snipe"]
 	path = submodules/evil-snipe
 	url = https://github.com/hlissner/evil-snipe
-[submodule "submodules/evil-magit"]
-	path = submodules/evil-magit
-	url = https://github.com/emacs-evil/evil-magit
 [submodule "submodules/evil-terminal-cursor-changer"]
 	path = submodules/evil-terminal-cursor-changer
 	url = https://github.com/7696122/evil-terminal-cursor-changer

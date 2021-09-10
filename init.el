@@ -631,9 +631,6 @@ comment-region works properly with whitespace comment-continue."
   "h h" 'counsel-recentf)
 
 (use-package magit :ensure t)
-;; TODO: if I use-package evil-magit, it also downloads evil. so smart
-(add-to-list 'load-path "~/.emacs.d/submodules/evil-magit")
-(require 'evil-magit)
 
 (use-package eyebrowse :ensure t :demand t
   :config
