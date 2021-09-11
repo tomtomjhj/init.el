@@ -325,10 +325,36 @@
 ;}}}
 
 ; coq {{{
-; mapping {{{
 ; TODO: https://proofgeneral.github.io/doc/master/userman/Coq-Proof-General/#Showing-Proof-Diffs
-; Note: this can't be done with things like dolist because `-map` is variable
-; C-c C-. proof-goto-end-of-locked
+; mapping {{{
+; Minor mode for keys common to main/goal/resp buffers
+; evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.com/a/61238
+(define-minor-mode my/coq-mode
+  :keymap (make-sparse-keymap))
+; TODO: prefer About to Check
+; TODO: check/locate visual region
+(evil-define-key 'normal 'my/coq-mode
+  (kbd "C-M-k") 'proof-undo-last-successful-command
+  (kbd "C-M-j") 'my/proof-assert-next-command
+  (kbd "M-d") 'company-coq-doc
+  (kbd "M-,") 'my/coq-Print-point
+  (kbd "M-.") 'my/coq-Check-point
+  (kbd "M-]") 'company-coq-jump-to-definition
+  (kbd ", l c") 'coq-LocateConstant
+  (kbd ", l l") 'proof-layout-windows
+  (kbd ", l p") 'proof-prf
+  (kbd ", C-c") 'proof-interrupt-process
+  (kbd "C-c s") 'proof-shell-exit
+  (kbd ", S") 'proof-find-theorems
+  (kbd ", ?") 'coq-Check
+  (kbd ", p") 'coq-Print
+  (kbd ", t p") 'my/coq-toggle-printing-level
+  (kbd ", ;") 'pg-insert-last-output-as-comment
+  (kbd ", o") 'company-coq-occur)
+(add-hook 'coq-mode-hook 'my/coq-mode)
+(add-hook 'coq-goals-mode-hook 'my/coq-mode)
+(add-hook 'coq-response-mode-hook 'my/coq-mode)
+; keys specific to main buffer
 (evil-define-key 'normal coq-mode-map
   (kbd "u") 'my/coq-undo
   (kbd "C-r") 'my/coq-redo
@@ -336,49 +362,16 @@
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
   (kbd "C-M-l") 'company-coq-proof-goto-point
-  (kbd "C-M-k") 'proof-undo-last-successful-command
-  (kbd "C-M-j") 'my/proof-assert-next-command
-  (kbd "M-d") 'company-coq-doc
-  (kbd "M-,") 'my/coq-Print-point
-  (kbd "M-.") 'my/coq-Check-point
-  (kbd "M-]") 'company-coq-jump-to-definition
   (kbd "C-w M-]") (lambda () (interactive) (evil-window-split) (company-coq-jump-to-definition (company-coq-symbol-at-point-with-error))))
-(evil-define-key 'normal coq-response-mode-map
-  (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'my/proof-assert-next-command
-  (kbd "M-d") 'company-coq-doc
-  (kbd "M-,") 'my/coq-Print-point
-  (kbd "M-.") 'my/coq-Check-point
-  (kbd "M-]") 'company-coq-jump-to-definition)
-(evil-define-key 'normal coq-goals-mode-map
-  (kbd "M-k") 'proof-undo-last-successful-command
-  (kbd "M-j") 'my/proof-assert-next-command
-  (kbd "M-d") 'company-coq-doc
-  (kbd "M-,") 'my/coq-Print-point
-  (kbd "M-.") 'my/coq-Check-point
-  (kbd "M-]") 'company-coq-jump-to-definition)
 (evil-define-key 'insert coq-mode-map
   (kbd "TAB") 'smie-indent-line
-  (kbd "M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
-  (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
-  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
+  (kbd "C-M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
+  (kbd "C-M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
+  (kbd "C-M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
   ;; Better than comment-indent-new-line as it uses indent-line-function, which
   ;; I set to indent-relative-first-indent-point
   (kbd "RET") 'newline-and-indent
   (kbd "M-i") 'indent-relative)
-(dolist (mode '(coq-mode coq-goals-mode coq-response-mode))
-  (evil-leader/set-key-for-mode mode
-    "l c" 'coq-LocateConstant
-    "l l" 'proof-layout-windows
-    "l p" 'proof-prf
-    "C-c" 'proof-interrupt-process
-    "x" 'proof-shell-exit
-    "S" 'proof-find-theorems
-    "?" 'coq-Check
-    "p" 'coq-Print
-    "t p" 'my/coq-toggle-printing-level
-    ";" 'pg-insert-last-output-as-comment
-    "o" 'company-coq-occur))
 ;}}}
 
 ; functions {{{
