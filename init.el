@@ -91,6 +91,10 @@
 (require 'evil)
 (evil-mode 1)
 
+; NOTE: <leader> is completely broken https://github.com/emacs-evil/evil/issues/1383 just explicitly map ,
+; NOTE: collision with evil and snipe's ,?
+; (evil-set-leader nil (kbd ","))
+
 (add-hook 'after-change-major-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
 (evil-select-search-module 'evil-search-module 'evil-search) ; evil-ex-search- for gn
@@ -153,6 +157,20 @@
 (define-key global-map (kbd "C-S-H") 'help-command)
 (define-key global-map (kbd "M-h") 'help-command)
 
+(evil-define-key 'normal 'global
+  (kbd ", k") 'kill-buffer
+  (kbd ", J") 'evil-join
+  (kbd ", <RET>") 'evil-ex-nohighlight
+  (kbd ", q") 'my/evil-quit
+  (kbd ", t t") 'eyebrowse-create-window-config
+  (kbd ", `") 'eyebrowse-last-window-config
+  (kbd ", w") 'evil-write
+  (kbd ", f n") (lambda () (interactive) (message (buffer-file-name)))
+  (kbd ", f m") 'delete-trailing-whitespace
+  (kbd ", s w") 'toggle-truncate-lines
+  (kbd ", t i") 'electric-indent-local-mode
+  (kbd ", i c") 'my/toggle-evil-ex-search-case)
+
 ; esc and C-q to quit everything.
 (defun minibuffer-keyboard-quit ()
   (interactive)
@@ -182,26 +200,6 @@
 (add-to-list 'load-path "~/.emacs.d/submodules/goto-chg")
 (require 'goto-chg)
 
-(add-to-list 'load-path "~/.emacs.d/submodules/evil-leader")
-(require 'evil-leader)
-(global-evil-leader-mode)
-(evil-leader/set-leader ",")
-
-(evil-leader/set-key
-  "k" 'kill-buffer
-  "J" 'evil-join
-  "<RET>" 'evil-ex-nohighlight
-  "q" 'my/evil-quit
-  "t t" 'eyebrowse-create-window-config
-  "`" 'eyebrowse-last-window-config
-  "w" 'evil-write
-  "f n" (lambda () (interactive) (message (buffer-file-name)))
-  "f m" 'delete-trailing-whitespace
-  "s w" 'toggle-truncate-lines
-  "t i" 'electric-indent-local-mode
-  "i c" 'my/toggle-evil-ex-search-case
-  )
-
 (define-key evil-normal-state-map (kbd "g t") 'eyebrowse-next-window-config)
 (define-key evil-normal-state-map (kbd "g T") 'eyebrowse-prev-window-config)
 
@@ -213,9 +211,9 @@
 (require 'evil-nerd-commenter)
 ; NOTE: M-;
 (global-set-key (kbd "M-/") 'evilnc-comment-or-uncomment-lines)
-(evil-leader/set-key
-  "c <SPC>" 'evilnc-comment-or-uncomment-lines
-  "c c" 'evilnc-copy-and-comment-lines)
+(evil-define-key '(normal visual) 'global
+  (kbd ", c <SPC>") 'evilnc-comment-or-uncomment-lines
+  (kbd ", c c") 'evilnc-copy-and-comment-lines)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-visualstar")
 (require 'evil-visualstar)
@@ -548,9 +546,9 @@ comment-region works properly with whitespace comment-continue."
   (setq neo-smart-open t)
   (setq neo-theme 'nerd)
   :config
-  (evil-leader/set-key
-    "n n" 'neotree-toggle
-    "n h" 'neotree-hidden-file-toggle))
+  (evil-define-key 'normal 'global
+    (kbd ", n n") 'neotree-toggle
+    (kbd ", n h") 'neotree-hidden-file-toggle))
 
 ; https://leanpub.com/markdown-mode/read
 (use-package markdown-mode :ensure t
@@ -615,7 +613,7 @@ comment-region works properly with whitespace comment-continue."
     (setq-local scroll-margin 0))
   (defadvice fzf/start (after normalize-fzf-mode-line activate)
     (setq mode-line-format nil))
-  (evil-leader/set-key "G" 'fzf-ripgrep))
+    (evil-define-key 'normal 'global (kbd ", G") 'fzf-ripgrep))
 
 ; M-i to insert current entry M-o: ivy-dispatching-done
 (use-package ivy :ensure t :diminish
@@ -651,10 +649,10 @@ comment-region works properly with whitespace comment-continue."
          ("M-s w" . swiper-thing-at-point)))
 
 (define-key evil-normal-state-map (kbd "C-f") 'counsel-fzf)
-(evil-leader/set-key
-  "e" 'counsel-find-file ; <BS> deletes each node
-  "b" 'ivy-switch-buffer
-  "h h" 'counsel-recentf)
+(evil-define-key 'normal 'global
+  (kbd ", e") 'counsel-find-file ; <BS> deletes each node
+  (kbd ", b") 'ivy-switch-buffer
+  (kbd ", h h") 'counsel-recentf)
 
 (use-package magit :ensure t)
 

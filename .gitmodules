@@ -10,9 +10,6 @@
 [submodule "evil-collection"]
 	path = submodules/evil-collection
 	url = https://github.com/emacs-evil/evil-collection
-[submodule "evil-leader"]
-	path = submodules/evil-leader
-	url = https://github.com/cofi/evil-leader
 [submodule "evil-nerd-commenter"]
 	path = submodules/evil-nerd-commenter
 	url = https://github.com/redguardtoo/evil-nerd-commenter
