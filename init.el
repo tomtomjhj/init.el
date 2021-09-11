@@ -330,7 +330,9 @@
 ; Note: this can't be done with things like dolist because `-map` is variable
 ; C-c C-. proof-goto-end-of-locked
 (evil-define-key 'normal coq-mode-map
-  "=" 'my/evil-indent-coq
+  (kbd "u") 'my/coq-undo
+  (kbd "C-r") 'my/coq-redo
+  (kbd "=") 'my/evil-indent-coq
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
   (kbd "C-M-l") 'company-coq-proof-goto-point
@@ -475,6 +477,32 @@ comment-region works properly with whitespace comment-continue."
     (setq indent-line-function 'smie-indent-line)
     (evil-indent beg end)
     (setq indent-line-function func)))
+; }}}
+
+; protected undo-tree {{{
+; undo-tree is not enabled because PG has its own undo impl. Manually enable.
+(add-hook 'coq-mode-hook #'undo-tree-mode)
+
+; undo-tree-undo'ing in the PG locked region may break the proof
+; Solution from https://github.com/ProofGeneral/PG/issues/430#issuecomment-604317650
+(defun my/pg-in-protected-region-p ()
+  (< (point) (proof-queue-or-locked-end)))
+
+(defmacro my/coq-wrap-edit (action)
+  `(if (or (not proof-locked-span)
+           (equal (proof-queue-or-locked-end) (point-min)))
+       (,action)
+     (,action)
+     (when (my/pg-in-protected-region-p)
+       (proof-goto-point))))
+
+(defun my/coq-redo ()
+  (interactive)
+  (my/coq-wrap-edit undo-tree-redo))
+
+(defun my/coq-undo ()
+  (interactive)
+  (my/coq-wrap-edit undo-tree-undo))
 ; }}}
 
 ; hooks, settings {{{
