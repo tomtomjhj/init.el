@@ -1,4 +1,4 @@
-; vim: set foldmethod=marker foldlevel=0 nomodeline:
+; -*- lexical-binding: t; -*-
 ; gc {{{
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
@@ -24,7 +24,6 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(require 'cl) ; lexcial-let
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -689,7 +688,7 @@ comment-region works properly with whitespace comment-continue."
 (set-fontset-font t nil (font-spec :name "Symbola"))
 (set-fontset-font nil 'hangul (font-spec :family "D2Coding"))
 
-(lexical-let*
+(let*
   ((default (face-attribute 'default :height))
    (size default))
   (defun global-scale-default ()
@@ -791,3 +790,4 @@ comment-region works properly with whitespace comment-continue."
 ; examples: https://github.com/SkySkimmer/.emacs.d
 ; https://www.emacswiki.org/emacs/ELPA#toc5
 ; TODO: tabbar (emacs 27)
+; vim: set foldmethod=marker foldlevel=0 nomodeline:
