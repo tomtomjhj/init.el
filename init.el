@@ -697,10 +697,10 @@ comment-region works properly with whitespace comment-continue."
     (global-scale-internal size))
   (defun global-scale-up ()
     (interactive)
-    (global-scale-internal (incf size 10)))
+    (global-scale-internal (cl-incf size 10)))
   (defun global-scale-down ()
     (interactive)
-    (global-scale-internal (decf size 10)))
+    (global-scale-internal (cl-decf size 10)))
   (defun global-scale-internal (arg)
     (set-face-attribute 'default (selected-frame) :height arg)))
 ; }}}
