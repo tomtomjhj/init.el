@@ -24,7 +24,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (vimish-fold avy xclip projectile diminish eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
+    (undo-tree better-jumper vimish-fold avy xclip projectile diminish eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
  '(proof-splash-enable nil)
  '(proof-universal-keys
    (quote

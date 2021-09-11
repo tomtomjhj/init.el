@@ -85,6 +85,7 @@
 (setq evil-split-window-below t)
 ; `_` isn't word char in emacs NOTE: symbol vs word
 (setq evil-symbol-word-search t)
+(setq evil-undo-system 'undo-tree)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil")
 (require 'evil)
@@ -277,6 +278,27 @@
 (require 'evil-vimish-fold)
 (global-evil-vimish-fold-mode 1)
 (diminish 'evil-vimish-fold-mode)
+
+; Understands `evil-set-jump` but doesn't use evil's jumplist.
+(use-package better-jumper :ensure t
+  :init
+  (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
+  (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
+  (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
+  :config
+  (better-jumper-mode +1))
+
+(use-package undo-tree :ensure t :diminish
+  :init
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  (setq undo-tree-visualizer-diff t)
+  :config
+  (global-undo-tree-mode))
+; NOTE: emacs undo is weird.
+; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
+; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
+; NOTE: emacs 28 has use undo-redo stuff and evil can use it
 ; }}}
 
 ; misc {{{
@@ -300,22 +322,6 @@
    ((eq evil-ex-search-case 'smart) (setq evil-ex-search-case 'sensitive))
    ((eq evil-ex-search-case 'sensitive) (setq evil-ex-search-case 'smart))))
 ;}}}
-;}}}
-
-; undo {{{
-(setq undo-tree-auto-save-history t)
-(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-(add-to-list 'load-path "~/.emacs.d/submodules/evil/lib")
-(require 'undo-tree)
-(global-undo-tree-mode)
-(diminish 'undo-tree-mode)
-(define-key evil-normal-state-map (kbd "u") 'undo-tree-undo)
-(define-key evil-normal-state-map (kbd "C-r") 'undo-tree-redo)
-; TODO: undo-tree-undo'ing in the PG locked region may break the proof
-; https://github.com/ProofGeneral/PG/issues/430#issuecomment-511967635
-; https://www.reddit.com/r/emacs/comments/6yzwic/how_emacs_undo_works/
-; http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
-; what does undo-tree.el do in evil???
 ;}}}
 
 ; coq {{{

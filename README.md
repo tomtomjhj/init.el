@@ -40,8 +40,6 @@ x
 * `toggle-debug-on-error` → how to use this?
 
 # TODO
-* rebase jumplist-squash to latest evil master
-    * note: undo-tree is now optional dependency https://github.com/emacs-evil/evil/pull/1360
 * use-package works fine with submodules. Don't put `:ensure` and configure `load-path`.
 * apropos?
 * https://depp.brause.cc/dotemacs/
@@ -50,5 +48,3 @@ x
   Definition a := (* asdf. *) 1.
   ```
 * take stuff from https://github.com/hlissner/doom-emacs/tree/develop/modules/editor/evil
-* doom's jump https://github.com/hlissner/doom-emacs/issues/2422
-    * use better-jumper
