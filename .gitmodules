@@ -1,9 +1,6 @@
 [submodule "evil"]
 	path = submodules/evil
 	url = https://github.com/tomtomjhj/evil
-[submodule "zenburn"]
-	path = submodules/zenburn
-	url = https://github.com/tomtomjhj/zenburn-emacs
 [submodule "evil-surround"]
 	path = submodules/evil-surround
 	url = https://github.com/emacs-evil/evil-surround

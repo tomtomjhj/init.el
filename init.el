@@ -37,9 +37,9 @@
 ; }}}
 
 ; themes {{{
-; TODO: remove submodule
-(add-to-list 'custom-theme-load-path "~/.emacs.d/submodules/zenburn")
-(setq zenburn-override-colors-alist
+(use-package zenburn-theme :ensure t
+  :init
+  (setq zenburn-override-colors-alist
         '(("zenburn-fg+1"     . "#FFFFEF")
           ("zenburn-fg"       . "#eaeae0")
           ("zenburn-fg-1"     . "#757565")
@@ -50,7 +50,8 @@
           ("zenburn-bg+2"     . "#4F4F4F")
           ("zenburn-bg+3"     . "#5F5F5F")
           ))
-(load-theme 'zenburn)
+  :config
+  (load-theme 'zenburn t))
 ; TODO: region should override lazy-highlight
 ; https://www.reddit.com/r/emacs/comments/345by9/having_the_background_face_for_selection_region/
 ; NOTE:
