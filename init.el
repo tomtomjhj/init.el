@@ -341,9 +341,9 @@
 ; coq {{{
 ; TODO: https://proofgeneral.github.io/doc/master/userman/Coq-Proof-General/#Showing-Proof-Diffs
 ; mapping {{{
-; Minor mode for keys common to main/goal/resp buffers
-; evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.com/a/61238
 (define-minor-mode my/coq-mode
+  "Minor mode for keys common to main/goal/resp buffers.
+evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.com/a/61238"
   :keymap (make-sparse-keymap))
 ; TODO: prefer About to Check
 ; TODO: check/locate visual region
