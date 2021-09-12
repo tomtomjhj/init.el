@@ -726,14 +726,15 @@ comment-region works properly with whitespace comment-continue."
 ; }}}
 
 ; font {{{
-(set-face-attribute 'default nil :height 110)
-(dolist (ft (fontset-list))
-  ; Main font
-  (set-fontset-font ft 'unicode (font-spec :family "Source Code Pro" :foundry "ADBO"))
-  ; Fallback font
-  (set-fontset-font ft nil (font-spec :name "DejaVu Sans Mono")))
-(set-fontset-font t nil (font-spec :name "Symbola"))
-(set-fontset-font nil 'hangul (font-spec :family "D2Coding"))
+(when (display-graphic-p)
+  (set-face-attribute 'default nil :height 110)
+  (dolist (ft (fontset-list))
+    ; Main font
+    (set-fontset-font ft 'unicode (font-spec :family "Source Code Pro" :foundry "ADBO"))
+    ; Fallback font
+    (set-fontset-font ft nil (font-spec :name "DejaVu Sans Mono")))
+  (set-fontset-font t nil (font-spec :name "Symbola"))
+  (set-fontset-font nil 'hangul (font-spec :family "D2Coding")))
 
 (let*
   ((default (face-attribute 'default :height))
