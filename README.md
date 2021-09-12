@@ -37,6 +37,7 @@ x
 * Fixing "xclip error can't open display" without exiting emacs: Open another term and get `$DISPLAY`, then `M-x setenv`.
     * This probably happens when disconnecting from ssh session hangs.
 * `previous-complete-history-element` doesn't put cursor on the last char because it gets history element which completes the minibuffer before the point. Just use `C-e`.
+    * https://github.com/emacs-evil/evil/issues/1086
 * `toggle-debug-on-error` → how to use this?
 
 # TODO

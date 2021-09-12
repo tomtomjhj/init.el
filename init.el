@@ -93,7 +93,6 @@
 (evil-mode 1)
 
 ; NOTE: <leader> is completely broken https://github.com/emacs-evil/evil/issues/1383 just explicitly map ,
-; NOTE: collision with evil and snipe's ,?
 ; (evil-set-leader nil (kbd ","))
 
 (add-hook 'after-change-major-mode-hook
@@ -237,6 +236,7 @@
 (setq evil-snipe-scope 'buffer)
 (setq evil-snipe-repeat-scope 'buffer)
 (setq evil-snipe-smart-case t)
+(setq evil-snipe-use-vim-sneak-bindings t)
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
@@ -263,9 +263,11 @@
                         (evil-snipe-enable-highlight)
                         (evil-snipe-enable-incremental-highlight))))
 
+(setq evil-collection-want-unimpaired-p nil)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection) ; this requires "annalist" package
-(dolist (mode '(company))
+; Don't use the evil-collection's bindings for these modes
+(dolist (mode '(company outline))
   (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
 (evil-collection-init)
 
@@ -289,7 +291,7 @@
 (diminish 'evil-vimish-fold-mode)
 
 ; Understands `evil-set-jump` but doesn't use evil's jumplist.
-(use-package better-jumper :ensure t
+(use-package better-jumper :ensure t :diminish ; TODO: doesn't diminish..
   :init
   (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
   (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
@@ -343,6 +345,8 @@
 ; TODO: prefer About to Check
 ; TODO: check/locate visual region
 (evil-define-key 'normal 'my/coq-mode
+  (kbd "M-k") 'proof-undo-last-successful-command
+  (kbd "M-j") 'my/proof-assert-next-command
   (kbd "C-M-k") 'proof-undo-last-successful-command
   (kbd "C-M-j") 'my/proof-assert-next-command
   (kbd "M-d") 'company-coq-doc
@@ -370,10 +374,14 @@
   (kbd "=") 'my/evil-indent-coq
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
+  (kbd "M-l") 'company-coq-proof-goto-point
   (kbd "C-M-l") 'company-coq-proof-goto-point
   (kbd "C-w M-]") (lambda () (interactive) (evil-window-split) (company-coq-jump-to-definition (company-coq-symbol-at-point-with-error))))
 (evil-define-key 'insert coq-mode-map
   (kbd "TAB") 'smie-indent-line
+  (kbd "M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
+  (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
+  (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
   (kbd "C-M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
   (kbd "C-M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "C-M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
@@ -523,7 +531,7 @@ comment-region works properly with whitespace comment-continue."
 (evil-declare-not-repeat #'proof-undo-last-successful-command)
 (evil-declare-not-repeat #'company-coq-proof-goto-point)
 
-(setq-default proof-three-window-mode-policy 'hybrid)
+(setq-default proof-three-window-mode-policy 'smart)
 
 (setq coq-smie-user-tokens
       '(("∗" . "/\\")
@@ -826,4 +834,4 @@ comment-region works properly with whitespace comment-continue."
 ; examples: https://github.com/SkySkimmer/.emacs.d
 ; https://www.emacswiki.org/emacs/ELPA#toc5
 ; TODO: tabbar (emacs 27)
-; vim: set foldmethod=marker foldlevel=0 nomodeline:
+; vim: set foldmethod=marker foldlevel=0 sw=2:
