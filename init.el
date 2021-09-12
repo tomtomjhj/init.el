@@ -207,12 +207,15 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
+(setq-default comment-column 0)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
 (evil-define-key 'insert 'global (kbd "M-/") 'comment-dwim)
 (evil-define-key '(normal visual) 'global
   (kbd ", c <SPC>") 'evilnc-comment-or-uncomment-lines
   (kbd ", c c") 'evilnc-copy-and-comment-lines)
+(define-key evil-inner-text-objects-map evilnc-comment-text-object 'evilnc-inner-commenter)
+(define-key evil-outer-text-objects-map evilnc-comment-text-object 'evilnc-outer-commenter)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-visualstar")
 (require 'evil-visualstar)
