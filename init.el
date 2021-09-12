@@ -209,8 +209,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
-; NOTE: M-;
-(global-set-key (kbd "M-/") 'evilnc-comment-or-uncomment-lines)
+(evil-define-key 'insert 'global (kbd "M-/") 'comment-dwim)
 (evil-define-key '(normal visual) 'global
   (kbd ", c <SPC>") 'evilnc-comment-or-uncomment-lines
   (kbd ", c c") 'evilnc-copy-and-comment-lines)
@@ -237,17 +236,28 @@
 (setq evil-snipe-scope 'buffer)
 (setq evil-snipe-repeat-scope 'buffer)
 (setq evil-snipe-smart-case t)
-; TODO: `,`, mappping overrides <leader> in snipe state(?)
 (require 'evil-snipe)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
 (diminish 'evil-snipe-local-mode)
+; Use "," exclusively as leader, and use "M-;" for reverse repeat only for motion states.
+; In other states, keep the default mapping M-; to comment-dwim.
+(evil-define-key 'motion evil-snipe-override-local-mode-map
+  (kbd ",") nil
+  (kbd "M-;") 'evil-snipe-repeat-reverse)
+(define-key evil-snipe-parent-transient-map
+  (kbd ",") nil)
 
 (use-package avy :ensure t)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-easymotion")
 (require 'evil-easymotion)
-(define-key evil-snipe-parent-transient-map (kbd ";")
+(define-key evil-snipe-parent-transient-map (kbd ", ;")
   (evilem-create 'evil-snipe-repeat
+                 :bind ((evil-snipe-scope 'buffer)
+                        (evil-snipe-enable-highlight)
+                        (evil-snipe-enable-incremental-highlight))))
+(define-key evil-snipe-parent-transient-map (kbd ", M-;")
+  (evilem-create 'evil-snipe-repeat-reverse
                  :bind ((evil-snipe-scope 'buffer)
                         (evil-snipe-enable-highlight)
                         (evil-snipe-enable-incremental-highlight))))
