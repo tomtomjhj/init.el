@@ -270,7 +270,7 @@
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
 (require 'evil-collection) ; this requires "annalist" package
 ; Don't use the evil-collection's bindings for these modes
-(dolist (mode '(company outline))
+(dolist (mode '(outline))
   (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
 (evil-collection-init)
 
@@ -597,29 +597,64 @@ comment-region works properly with whitespace comment-continue."
 ; completion & snippets with supertab + ultisnips behavior
 (use-package company :ensure t :diminish
   :config
-  (setq company-dabbrev-downcase nil)
+  (setq company-selection-wrap-around t)
+  (setq company-dabbrev-downcase nil
+        company-dabbrev-other-buffers nil
+        company-dabbrev-ignore-case nil)
   (setq company-idle-delay 0.2)
   (setq company-transformers
     '(company-sort-by-backend-importance
       company-sort-prefer-same-case-prefix
       company-sort-by-occurrence))
-  (company-tng-configure-default)
+  ; make company work like vim ins-completion
+  (company-tng-mode)
+  ; override default evil-collection maps
   (evil-collection-define-key nil 'company-active-map
-    ; TODO: c-w doesn't work as expected
-    ; TODO: how to use company-dabbrev?
-    (kbd "C-w") 'evil-delete-backward-word
-    (kbd "<tab>") 'company-select-next
-    ; '(lambda () (interactive) (company-complete-common-or-cycle -1))
-    (kbd "<backtab>") 'company-select-previous-or-abort
+    ; -or-abort variants fail if there's single candidate
+    (kbd "C-n") 'company-select-next
+    (kbd "C-p") 'company-select-previous
+    (kbd "C-j") nil
+    (kbd "C-k") nil
+    (kbd "M-j") nil
+    (kbd "M-k") nil
+    (kbd "C-w") nil
+    ; <S-tab> in terminal is <S-iso-leftab>
     (kbd "<S-iso-lefttab>") 'company-select-previous-or-abort
-    (kbd "<S-tab>") 'company-select-previous-or-abort)
-  ; https://github.com/company-mode/company-mode/issues/881
-  (advice-add 'company-tng--supress-post-completion :override #'ignore)
+    (kbd "C-e") 'company-abort
+    (kbd "C-y") 'company-complete-selection)
+  (evil-collection-define-key nil 'company-search-map
+    (kbd "M-j") nil
+    (kbd "M-k") nil)
+  (evil-define-key 'insert 'global
+    (kbd "C-x C-f") 'company-files
+    (kbd "C-x C-]") 'company-etags
+    (kbd "C-x s")   'company-ispell
+    (kbd "C-x C-s") 'company-yasnippet
+    (kbd "C-x C-o") 'company-capf
+    (kbd "C-n") '+company/dabbrev
+    (kbd "C-p") '+company/dabbrev-previous)
   :hook (after-init . global-company-mode))
+
+; taken from doom
+(defun +company/dabbrev ()
+  "Invokes `company-dabbrev-code' in prog-mode buffers and `company-dabbrev'
+everywhere else."
+  (interactive)
+  (call-interactively
+   (if (derived-mode-p 'prog-mode)
+       #'company-dabbrev-code
+     #'company-dabbrev)))
+
+(defun +company/dabbrev-previous ()
+  "Like `+company/dabbrev', but starts from the bottom of the list."
+  (interactive)
+  (let ((company-selection-wrap-around t))
+    (call-interactively #'+company/dabbrev)
+    (company-select-previous-or-abort)))
 
 (use-package yasnippet :ensure t :diminish yas-minor-mode
   :config
-  (define-key yas-minor-mode-map "\C-l" 'yas-expand)
+  (define-key yas-minor-mode-map "\C-l" 'yas-expand) ; TODO: requires explitcit company-select-next even if the typed text exactly matches the snippet
   (define-key yas-keymap "\C-j" 'yas-next-field-or-maybe-expand)
   (define-key yas-keymap "\C-k" 'yas-prev-field)
   (dolist (keymap (list yas-minor-mode-map yas-keymap))
