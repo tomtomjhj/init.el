@@ -32,7 +32,9 @@
                (cons "melpa" (concat proto "://melpa.org/packages/")) t))
 (setq package-enable-at-startup nil)
 (package-initialize)
-(require 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 (use-package diminish :ensure t :demand t)
 ; }}}
 
@@ -58,7 +60,7 @@
 ; * isearch, lazy-highlight: uses zenburn yellow if `:foreground nil` is not specified
 ; * line-number: match zenburn-fg-1 zenburn-bg
 
-(require 'rainbow-delimiters)
+(use-package rainbow-delimiters :ensure t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'coq-response-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'coq-goals-mode-hook 'rainbow-delimiters-mode)
@@ -269,7 +271,8 @@
 
 (setq evil-collection-want-unimpaired-p nil)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-collection")
-(require 'evil-collection) ; this requires "annalist" package
+(use-package annalist :ensure t) ; evil-collection dependency
+(require 'evil-collection)
 ; Don't use the evil-collection's bindings for these modes
 (dolist (mode '(outline))
   (setq evil-collection-mode-list (delq mode evil-collection-mode-list)))
@@ -340,7 +343,8 @@
 ; misc {{{
 ; fine-grained word
 ; TODO: no camel case, more fine-grained control over special characters
-(global-syntax-subword-mode)
+(use-package syntax-subword :ensure t
+  :config (global-syntax-subword-mode))
 (define-key evil-insert-state-map (kbd "C-j") 'syntax-subword-right)
 (define-key evil-insert-state-map (kbd "C-k") 'syntax-subword-left)
 (define-key evil-insert-state-map (kbd "C-<SPC>") 'evil-insert-digraph)
