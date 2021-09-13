@@ -116,7 +116,7 @@
   (lambda () (interactive) (evil-delete (point-at-bol) (point))))
 
 (defun my/break-undo (f)
-  (progn (evil-end-undo-step) (funcall f) (evil-start-undo-step)))
+  (progn (evil-end-undo-step) (call-interactively f) (evil-start-undo-step)))
 ; }}}
 
 ; basic {{{
@@ -210,7 +210,8 @@
 (setq-default comment-column 0)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
-(evil-define-key 'insert 'global (kbd "M-/") 'comment-dwim)
+(evil-define-key 'insert 'global (kbd "M-/") (lambda () (interactive) (my/break-undo 'comment-dwim)))
+; TODO: evilnc text object doesn't understand coqdoc comment (** *) because comment-start includes a space..
 (evil-define-key '(normal visual) 'global
   (kbd ", c <SPC>") 'evilnc-comment-or-uncomment-lines
   (kbd ", c c") 'evilnc-copy-and-comment-lines)
