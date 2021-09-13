@@ -432,12 +432,12 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   (setq evil-shift-width 2
         tab-width 2)
   (setq comment-style 'multi-line)
-  ; TODO: Don't add "   " in the empty line.
-  ; If the "   " is removed, then uncomment fails to un-indent the text below the empty line.
   ; TODO: https://github.com/emacs-evil/evil/issues/606
   ; Rollback these and fix evil-join? Does gq work properly?
-  (setq comment-continue "   ") ; (* ...    style comment
-                                ;    ... *) need modified comment-padright
+  ; These comment-continue styles require the modified comment-padright
+  (setq comment-continue "")
+  ; For this style, if the "   " is removed, then uncomment fails to un-indent the text below the empty line.
+  ; (setq comment-continue "   ")
   (setq vimish-fold-marks '("<!--" . "-->"))
   (diminish 'hs-minor-mode)
   (diminish 'outline-minor-mode)
@@ -451,6 +451,7 @@ so that `indent-according-to-mode' mode doesn't handle it specially."
   (interactive)
   (indent-relative t))
 
+; Redefine some commment functions to allow whitespace comment-continue {{{
 (defun comment-padright (str &optional n)
   "Construct a string composed of STR plus `comment-padding'.
 It also adds N copies of the last non-whitespace chars of STR.
@@ -459,33 +460,132 @@ ignored from `comment-padding'.
 N defaults to 0.
 If N is `re', a regexp is returned instead, that would match
 the string for any N.
+
 This modified version just returns str if it's a whitespace so that
 comment-region works properly with whitespace comment-continue."
   (setq n (or n 0))
   (if (and (stringp str) (string-match "\\S-" str))
-      ;; Separate the actual string from any leading/trailing padding
-      (progn
-        (string-match "\\`\\s-*\\(.*?\\)\\s-*\\'" str)
-        (let ((s (match-string 1 str))    ;actual string
-              (lpad (substring str 0 (match-beginning 1))) ;left padding
-              (rpad (concat (substring str (match-end 1)) ;original right padding
-                            (substring comment-padding ;additional right padding
-                                       (min (- (match-end 0) (match-end 1))
-                                            (length comment-padding)))))
-              (multi (not (and comment-quote-nested
-                               ;; comment-end is a single char
-                               (string-match "\\`\\s-*\\S-\\s-*\\'" comment-end)))))
-          (if (not (symbolp n))
-              (concat lpad s (when multi (make-string n (aref str (1- (match-end 1))))) rpad)
-            ;; construct a regexp that would match anything from just S
-            ;; to any possible output of this function for any N.
-            (concat (mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
-                               lpad "")    ;padding is not required
-                    (regexp-quote s)
-                    (when multi "+")    ;the last char of S might be repeated
-                    (mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
-                               rpad ""))))) ;padding is not required
-    str))
+    ;; Separate the actual string from any leading/trailing padding
+    (progn
+    (string-match "\\`\\s-*\\(.*?\\)\\s-*\\'" str)
+    (let ((s (match-string 1 str))	;actual string
+	  (lpad (substring str 0 (match-beginning 1))) ;left padding
+	  (rpad (concat (substring str (match-end 1)) ;original right padding
+			(substring comment-padding ;additional right padding
+				   (min (- (match-end 0) (match-end 1))
+					(length comment-padding)))))
+	  ;; We can only duplicate C if the comment-end has multiple chars
+	  ;; or if comments can be nested, else the comment-end `}' would
+	  ;; be turned into `}}' where only the first ends the comment
+	  ;; and the rest becomes bogus junk.
+	  (multi (not (and comment-quote-nested
+			   ;; comment-end is a single char
+			   (string-match "\\`\\s-*\\S-\\s-*\\'" comment-end)))))
+      (if (not (symbolp n))
+	  (concat lpad s (when multi (make-string n (aref str (1- (match-end 1))))) rpad)
+	;; construct a regexp that would match anything from just S
+	;; to any possible output of this function for any N.
+	(concat (mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
+			   lpad "")	;padding is not required
+		(regexp-quote s)
+		(when multi "+")	;the last char of S might be repeated
+		(mapconcat (lambda (c) (concat (regexp-quote (string c)) "?"))
+			   rpad ""))))) ;padding is not required
+
+    str)) ; MODIFIED return str if str is whitespace
+
+(defun comment-region-internal (beg end cs ce
+                                &optional ccs cce block lines indent)
+  "Comment region BEG .. END.
+CS and CE are the comment start string and comment end string,
+respectively.  CCS and CCE are the comment continuation strings
+for the start and end of lines, respectively (default to CS and CE).
+BLOCK indicates that end of lines should be marked with either CCE,
+CE or CS \(if CE is empty) and that those markers should be aligned.
+LINES indicates that an extra lines will be used at the beginning
+and end of the region for CE and CS.
+INDENT indicates to put CS and CCS at the current indentation of
+the region rather than at left margin.
+
+This modified version does not mark the empty line if CCS is whitespace."
+  ;;(assert (< beg end))
+  (let ((no-empty (not (or (eq comment-empty-lines t)
+			   (and comment-empty-lines (zerop (length ce))))))
+	ce-sanitized)
+    ;; Sanitize CE and CCE.
+    (if (and (stringp ce) (string= "" ce)) (setq ce nil))
+    (setq ce-sanitized ce)
+    (if (and (stringp cce) (string= "" cce)) (setq cce nil))
+    ;; If CE is empty, multiline cannot be used.
+    (unless ce (setq ccs nil cce nil))
+    ;; Should we mark empty lines as well ?
+    (if (or ccs block lines) (setq no-empty nil))
+    ; MODIFIED
+    (setq no-empty (or no-empty (and (stringp ccs) (not (string-match "\\S-" ccs)))))
+    ;; Make sure we have end-markers for BLOCK mode.
+    (when block (unless ce (setq ce (comment-string-reverse cs))))
+    ;; If BLOCK is not requested, we don't need CCE.
+    (unless block (setq cce nil))
+    ;; Continuation defaults to the same as CS and CE.
+    (unless ccs (setq ccs cs cce ce))
+
+    (save-excursion
+      (goto-char end)
+      ;; If the end is not at the end of a line and the comment-end
+      ;; is implicit (i.e. a newline), explicitly insert a newline.
+      (unless (or ce-sanitized (eolp)) (insert "\n") (indent-according-to-mode))
+      (comment-with-narrowing beg end
+	(let ((min-indent (point-max))
+	      (max-indent 0))
+	  (goto-char (point-min))
+	  ;; Quote any nested comment marker
+	  (comment-quote-nested comment-start comment-end nil)
+
+	  ;; Loop over all lines to find the needed indentations.
+	  (goto-char (point-min))
+	  (while
+	      (progn
+		(unless (looking-at "[ \t]*$")
+		  (setq min-indent (min min-indent (current-indentation))))
+		(end-of-line)
+		(setq max-indent (max max-indent (current-column)))
+		(not (or (eobp) (progn (forward-line) nil)))))
+
+	  (setq max-indent
+		(+ max-indent (max (length cs) (length ccs))
+                   ;; Inserting ccs can change max-indent by (1- tab-width)
+                   ;; but only if there are TABs in the boxed text, of course.
+                   (if (save-excursion (goto-char beg)
+                                       (search-forward "\t" end t))
+                       (1- tab-width) 0)))
+	  (unless indent (setq min-indent 0))
+
+	  ;; make the leading and trailing lines if requested
+	  (when lines
+            ;; Trim trailing whitespace from cs if there's some.
+            (setq cs (string-trim-right cs))
+
+	    (let ((csce
+		   (comment-make-extra-lines
+		    cs ce ccs cce min-indent max-indent block)))
+	      (setq cs (car csce))
+	      (setq ce (cdr csce))))
+
+	  (goto-char (point-min))
+	  ;; Loop over all lines from BEG to END.
+	  (while
+	      (progn
+		(unless (and no-empty (looking-at "[ \t]*$"))
+		  (move-to-column min-indent t)
+		  (insert cs) (setq cs ccs) ;switch to CCS after the first line
+		  (end-of-line)
+		  (if (eobp) (setq cce ce))
+		  (when cce
+		    (when block (move-to-column max-indent t))
+		    (insert cce)))
+		(end-of-line)
+		(not (or (eobp) (progn (forward-line) nil))))))))))
+; }}}
 
 (defvar my/coq-printing-level 0)
 (defun my/coq-toggle-printing-level ()
