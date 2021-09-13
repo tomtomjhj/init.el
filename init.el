@@ -397,32 +397,40 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
 (evil-define-key 'normal coq-mode-map
   (kbd "u") 'my/coq-undo
   (kbd "C-r") 'my/coq-redo
-  (kbd "=") 'my/evil-indent-coq
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
   (kbd "M-l") 'company-coq-proof-goto-point
   (kbd "C-M-l") 'company-coq-proof-goto-point
   (kbd "C-w M-]") (lambda () (interactive) (evil-window-split) (company-coq-jump-to-definition (company-coq-symbol-at-point-with-error))))
 (evil-define-key 'insert coq-mode-map
-  (kbd "TAB") 'smie-indent-line
   (kbd "M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
   (kbd "C-M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
   (kbd "C-M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
-  (kbd "C-M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
-  ;; Better than comment-indent-new-line as it uses indent-line-function, which
-  ;; I set to indent-relative-first-indent-point
-  (kbd "RET") 'newline-and-indent
-  (kbd "M-i") 'indent-relative)
+  (kbd "C-M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
+; Indentation mappings
+; Coq uses smie-indent-line for indent-line-function by default.
+; It indents codes too eagerly and doesn't indent comments, which is quite annoying.
+; So, set indent-line-function to my/indent-relative-first-indent-point, which works like vim's autoindent,
+; and run smie indent manually when needed.
+(evil-define-key 'insert coq-mode-map
+  (kbd "TAB") 'tab-to-tab-stop ; NOTE: This uses tab-width, NOT evil-shift-width. Add a function for expandtab <tab> that uses evil-shift-width?
+  (kbd "C-f") 'smie-indent-line
+  (kbd "M-i") 'indent-relative
+  ; Better than comment-indent-new-line because newline-and-indent uses indent-line-function
+  ; NOTE: RET was mapped to company-coq-maybe-exit-snippet
+  (kbd "RET") 'newline-and-indent)
+(evil-define-key 'normal coq-mode-map
+  (kbd "=") 'my/evil-indent-coq) ; use smie-indent-line for =
 ;}}}
 
 ; functions {{{
 (defun my/coq-mode-setup ()
-  ;; allow some manual indentation
-  (setq indent-line-function 'indent-relative-first-indent-point)
+  (setq indent-line-function 'my/indent-relative-first-indent-point)
   (setq electric-indent-inhibit t)
-  (setq evil-shift-width 2)
+  (setq evil-shift-width 2
+        tab-width 2)
   (setq comment-style 'multi-line)
   ; TODO: Don't add "   " in the empty line.
   ; If the "   " is removed, then uncomment fails to un-indent the text below the empty line.
@@ -436,6 +444,12 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   (load-file "~/.emacs.d/pg-ssr.el")
   (proof-definvisible my/coq-printing-1 "Set Printing Coercions. Set Printing Implicit")
   (proof-definvisible my/coq-printing-0 "Unset Printing Coercions. Unset Printing Implicit. Unset Printing All."))
+
+(defun my/indent-relative-first-indent-point ()
+  "Equivalent to `indent-relative-first-indent-point', but with different name
+so that `indent-according-to-mode' mode doesn't handle it specially."
+  (interactive)
+  (indent-relative t))
 
 (defun comment-padright (str &optional n)
   "Construct a string composed of STR plus `comment-padding'.
