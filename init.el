@@ -73,7 +73,7 @@
       scroll-margin 3 ; vim's `scrolloff`
       scroll-conservatively 101)
 (setq evil-want-C-i-jump t)
-(setq evil-want-C-u-scroll t) ; TODO: alternative map for original C-u
+(setq evil-want-C-u-scroll t) ; use ", u" for universal-argument
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-want-Y-yank-to-eol t)
@@ -116,6 +116,7 @@
 
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (evil-delete (point-at-bol) (point))))
+(evil-define-key 'normal 'global (kbd ", u") 'universal-argument)
 
 (defun my/break-undo (f)
   (progn (evil-end-undo-step) (call-interactively f) (evil-start-undo-step)))
