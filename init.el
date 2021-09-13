@@ -356,6 +356,7 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   (kbd "M-,") 'my/coq-Print-point
   (kbd "M-.") 'my/coq-Check-point
   (kbd "M-]") 'company-coq-jump-to-definition
+  (kbd ", c s") 'coq-Search
   (kbd ", l c") 'coq-LocateConstant
   (kbd ", l l") 'proof-layout-windows
   (kbd ", l p") 'proof-prf
@@ -527,6 +528,7 @@ comment-region works properly with whitespace comment-continue."
 ; interaction of jump-to-definition and evil jump lists (C-o, C-i)
 (evil-add-command-properties #'company-coq-jump-to-definition :jump t)
 (evil-add-command-properties #'proof-goto-end-of-locked :jump t)
+(evil-add-command-properties #'proof-interrupt-process :jump t)
 
 ; TODO: make M-j/k :jump considering proof-end-of-locked-visible-p or error
 ; don't repeat proof stuff with `.`.
