@@ -295,13 +295,34 @@
 (diminish 'evil-vimish-fold-mode)
 
 ; Understands `evil-set-jump` but doesn't use evil's jumplist.
-(use-package better-jumper :ensure t :diminish ; TODO: doesn't diminish..
+(use-package better-jumper :ensure t
+  :diminish better-jumper-local-mode
   :init
   (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
   (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
   (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
   :config
-  (better-jumper-mode +1))
+  (better-jumper-mode +1)
+
+  ; taken from doom
+  (defun my/set-jump-a (orig-fn &rest args)
+    "Set a jump point and ensure ORIG-FN doesn't set any new jump points."
+    (better-jumper-set-jump (if (markerp (car args)) (car args)))
+    (let ((evil--jumps-jumping t)
+          (better-jumper--jumping t))
+      (apply orig-fn args)))
+
+  ;; Creates a jump point before killing a buffer. This allows you to undo
+  ;; killing a buffer easily (only works with file buffers though; it's not
+  ;; possible to resurrect special buffers).
+  ;;
+  ;; I'm not advising `kill-buffer' because I only want this to affect
+  ;; interactively killed buffers.
+  (advice-add #'kill-current-buffer :around #'my/set-jump-a)
+
+  ;; Create a jump point before jumping with imenu.
+  (advice-add #'imenu :around #'my/set-jump-a))
+
 
 (use-package undo-tree :ensure t :diminish
   :init
@@ -699,7 +720,9 @@ everywhere else."
   :config (projectile-mode +1))
 
 (use-package counsel :ensure t
-  :init (setq counsel-fzf-cmd "~/.fzf/bin/fzf -f \"%s\"")
+  :init
+  (setq counsel-fzf-cmd "~/.fzf/bin/fzf -f \"%s\"")
+  (evil-add-command-properties #'counsel-find-file :jump t)
   :bind ("M-x" . counsel-M-x))
 
 (use-package swiper :ensure t :after ivy
