@@ -99,6 +99,7 @@
 
 (add-hook 'after-change-major-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
+; TODO: search pattern is not global?? (but the highlight is global)
 (evil-select-search-module 'evil-search-module 'evil-search) ; evil-ex-search- for gn
 ; }}}
 
@@ -160,6 +161,8 @@
 (define-key global-map (kbd "C-S-H") 'help-command)
 (define-key global-map (kbd "M-h") 'help-command)
 
+; TODO: evil-join (= join-line) doesn't insert space when joining line that
+; start with closing paren e.g. .\n}. This is a feature.
 (evil-define-key 'normal 'global
   (kbd ", k") 'kill-buffer
   (kbd ", J") 'evil-join
@@ -173,6 +176,8 @@
   (kbd ", s w") 'toggle-truncate-lines
   (kbd ", t i") 'electric-indent-local-mode
   (kbd ", i c") 'my/toggle-evil-ex-search-case)
+(evil-define-key 'visual 'global
+  (kbd ", J") 'evil-join)
 
 ; esc and C-q to quit everything.
 (defun minibuffer-keyboard-quit ()
@@ -213,6 +218,10 @@
 (setq-default comment-column 0)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-nerd-commenter")
 (require 'evil-nerd-commenter)
+; TODO: comment-dwim sometimes doesn't do what I mean, which is to simply
+; insert the comment right at the point. It does weird things like alignment
+; and moving cursor to the eol.
+; ... (insert "(* "), (insert " *)")
 (evil-define-key 'insert 'global (kbd "M-/") (lambda () (interactive) (my/break-undo 'comment-dwim)))
 ; TODO: evilnc text object doesn't understand coqdoc comment (** *) because comment-start includes a space..
 (evil-define-key '(normal visual) 'global
@@ -240,6 +249,7 @@
 (evil-define-key 'visual evil-visualstar-mode-map (kbd "*") 'my/visualstar-keep-position)
 
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-snipe")
+(setq evil-snipe-repeat-keys nil)
 (setq evil-snipe-scope 'buffer)
 (setq evil-snipe-repeat-scope 'buffer)
 (setq evil-snipe-smart-case t)
@@ -259,6 +269,7 @@
 (use-package avy :ensure t)
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-easymotion")
 (require 'evil-easymotion)
+; TODO: enter label mode automatically, and make "," and "M-;" keep working
 (define-key evil-snipe-parent-transient-map (kbd ", ;")
   (evilem-create 'evil-snipe-repeat
                  :bind ((evil-snipe-scope 'buffer)
@@ -374,6 +385,7 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   :keymap (make-sparse-keymap))
 ; TODO: prefer About to Check
 ; TODO: check/locate visual region
+; TODO: "C-c ," to jump to the error point
 (evil-define-key 'normal 'my/coq-mode
   (kbd "M-k") 'proof-undo-last-successful-command
   (kbd "M-j") 'my/proof-assert-next-command
@@ -425,7 +437,7 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   (kbd "M-i") 'indent-relative
   ; Better than comment-indent-new-line because newline-and-indent uses indent-line-function
   ; NOTE: RET was mapped to company-coq-maybe-exit-snippet
-  (kbd "RET") 'newline-and-indent)
+  (kbd "RET") 'newline-and-indent) ; TODO: break undo at nonblank line
 (evil-define-key 'normal coq-mode-map
   (kbd "=") 'my/evil-indent-coq) ; use smie-indent-line for =
 ;}}}
@@ -641,6 +653,7 @@ This modified version does not mark the empty line if CCS is whitespace."
 ; undo-tree-undo'ing in the PG locked region may break the proof
 ; Solution from https://github.com/ProofGeneral/PG/issues/430#issuecomment-604317650
 (defun my/pg-in-protected-region-p ()
+  ; TODO: this should be <=
   (< (point) (proof-queue-or-locked-end)))
 
 (defmacro my/coq-wrap-edit (action)
@@ -649,6 +662,9 @@ This modified version does not mark the empty line if CCS is whitespace."
        (,action)
      (,action)
      (when (my/pg-in-protected-region-p)
+       ; TODO: Broken because proof-assert-until-point is too eager. It should
+       ; not assert the sentence containing the point. Find the function used
+       ; for retracting when editing inside the locked region.
        (proof-goto-point))))
 
 (defun my/coq-redo ()
