@@ -1,6 +1,6 @@
-[submodule "evil"]
+[submodule "submodules/evil"]
 	path = submodules/evil
-	url = https://github.com/tomtomjhj/evil
+	url = https://github.com/emacs-evil/evil
 [submodule "evil-surround"]
 	path = submodules/evil-surround
 	url = https://github.com/emacs-evil/evil-surround

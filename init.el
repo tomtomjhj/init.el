@@ -866,8 +866,8 @@ everywhere else."
   :bind (("M-s M-s" . swiper-isearch)
          ("M-s w" . swiper-thing-at-point)))
 
-(define-key evil-normal-state-map (kbd "C-f") 'counsel-fzf)
 (evil-define-key 'normal 'global
+  (kbd "C-f") 'counsel-fzf
   (kbd ", e") 'counsel-find-file ; <BS> deletes each node
   (kbd ", b") 'ivy-switch-buffer
   (kbd ", h h") 'counsel-recentf)
