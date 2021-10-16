@@ -113,6 +113,9 @@
 (define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
 (define-key minibuffer-local-map (kbd "C-<SPC>") 'evil-insert-digraph)
 (define-key minibuffer-local-map (kbd "C-@") 'evil-insert-digraph)
+; cmap = evil-ex-completion-map?
+(define-key evil-ex-completion-map (kbd "C-<SPC>") 'evil-insert-digraph)
+(define-key evil-ex-completion-map (kbd "C-@") 'evil-insert-digraph)
 ; TODO completion in minibuffer
 
 (define-key evil-insert-state-map (kbd "C-u")
@@ -701,6 +704,9 @@ This modified version does not mark the empty line if CCS is whitespace."
         ("==∗" . "->")
         ("=∗" . "->")))
 
+(setq company-coq-disabled-features '(hello smart-subscripts spinner)
+      company-coq-features/prettify-symbols-in-terminals t)
+
 (setq company-coq-prettify-symbols-alist
       '(
         ("|-" . ?⊢) ("||" . ?‖) ("/\\" . ?∧) ("\\/" . ?∨)
@@ -1017,8 +1023,18 @@ everywhere else."
         ((?< ?\\) . ?≼)
         ((?t ?p) . ?⊤)
         ((?b ?t) . ?⊥)
+        ((?[ ?U) . ?⊓)
+        ((?] ?U) . ?⊔)
+        ((?[ ?C) . ?⊏)
+        ((?] ?C) . ?⊐)
+        ((?[ ?_) . ?⊑)
+        ((?] ?_) . ?⊒)
+        ((?( ?+) . ?∉)
+        ((?\\ ?\\) . ?∖)
         ))
-(push '(?* "[*∗]") evil-snipe-aliases)
+(dolist (alias '((?a "[aα∀]") (?b "[bβ]") (?c "[cξ]") (?d "[dδ]") (?e "[eε∃]") (?f "[fφ]") (?g "[gγ]") (?h "[hθ]") (?i "[iι]") (?j "[jϊ]") (?k "[kκ]") (?l "[lλ]") (?m "[mμ]") (?n "[nν]") (?o "[oο]") (?p "[pπ]") (?q "[qψ]") (?r "[rρ]") (?s "[sσ]") (?t "[tτ]") (?u "[uυ]") (?v "[vϋ𝓥]") (?w "[wω]") (?x "[xχ]") (?y "[yη]") (?z "[zζ]") (?* "[*∗]") (?/ "[/∧]") (?\ "[\∨]") (?< "[<≼]") (?> "[>↦→⇒⇝]") (?[ "[[⌜⎡⊑⊓]") (?] "[\]⌝⎤⊒⊔]")))
+  (push alias evil-snipe-aliases))
+
 
 (setq-default fill-column 80)
 
