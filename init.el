@@ -698,11 +698,19 @@ This modified version does not mark the empty line if CCS is whitespace."
 
 (setq-default proof-three-window-mode-policy 'smart)
 
+(setq coq-compile-before-require t)
+
 (setq coq-smie-user-tokens
-      '(("∗" . "/\\")
+      '(("∗" . "*")
         ("-∗" . "->")
+        ("∗-∗" . "<->")
         ("==∗" . "->")
-        ("=∗" . "->")))
+        ("⊢" . "->")
+        ("⊣⊢" . "<->")
+        ("⋅" . "*")
+        (":>" . ":=")
+        ("by" . "now")
+        ("forall" . "now")))
 
 (setq company-coq-disabled-features '(hello smart-subscripts spinner)
       company-coq-features/prettify-symbols-in-terminals t)
@@ -721,6 +729,8 @@ This modified version does not mark the empty line if CCS is whitespace."
         ;("-->" . ?⟶) ("<--" . ?⟵) ("<-->" . ?⟷)
         ;("==>" . ?⟹) ("<==" . ?⟸) ("~~>" . ?⟿) ("<~~" . ?⬳)
         ))
+
+; TODO https://coq.zulipchat.com/#narrow/stream/304019-Proof-General.20users/topic/tactic.20completion.20scaling.20in.20company-coq/near/258439819
 ; }}}
 ; }}}
 
