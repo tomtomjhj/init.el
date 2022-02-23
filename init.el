@@ -73,7 +73,7 @@
       scroll-margin 3 ; vim's `scrolloff`
       scroll-conservatively 101)
 (setq evil-want-C-i-jump t)
-(setq evil-want-C-u-scroll t) ; use ", u" for universal-argument
+(setq evil-want-C-u-scroll t) ; use "<SPC> u" for universal-argument
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-want-Y-yank-to-eol t)
@@ -95,7 +95,7 @@
 (evil-mode 1)
 
 ; NOTE: <leader> is completely broken https://github.com/emacs-evil/evil/issues/1383 just explicitly map ,
-; (evil-set-leader nil (kbd ","))
+; (evil-set-leader nil (kbd "<SPC>"))
 
 (add-hook 'after-change-major-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
@@ -120,7 +120,7 @@
 
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (evil-delete (point-at-bol) (point))))
-(evil-define-key 'normal 'global (kbd ", u") 'universal-argument)
+(evil-define-key 'normal 'global (kbd "<SPC> u") 'universal-argument)
 
 (defun my/break-undo (f)
   (progn (evil-end-undo-step) (call-interactively f) (evil-start-undo-step)))
@@ -152,7 +152,6 @@
 (define-key evil-motion-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-motion-state-map (kbd "C-k") 'evil-window-up)
 (define-key evil-motion-state-map (kbd "C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "<SPC>") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "C-<SPC>") 'evil-scroll-up)
 (define-key evil-normal-state-map (kbd "C-@") 'evil-scroll-up)
 (define-key evil-visual-state-map (kbd "H") 'evil-backward-char)
@@ -167,20 +166,20 @@
 ; TODO: evil-join (= join-line) doesn't insert space when joining line that
 ; start with closing paren e.g. .\n}. This is a feature.
 (evil-define-key 'normal 'global
-  (kbd ", k") 'kill-buffer
-  (kbd ", J") 'evil-join
-  (kbd ", <RET>") 'evil-ex-nohighlight
-  (kbd ", q") 'my/evil-quit
-  (kbd ", t t") 'eyebrowse-create-window-config
-  (kbd ", `") 'eyebrowse-last-window-config
-  (kbd ", w") 'evil-write
-  (kbd ", f n") (lambda () (interactive) (message (buffer-file-name)))
-  (kbd ", f m") 'delete-trailing-whitespace
-  (kbd ", s w") 'toggle-truncate-lines
-  (kbd ", t i") 'electric-indent-local-mode
-  (kbd ", i c") 'my/toggle-evil-ex-search-case)
+  (kbd "<SPC> k") 'kill-buffer
+  (kbd "<SPC> J") 'evil-join
+  (kbd "<SPC> <RET>") 'evil-ex-nohighlight
+  (kbd "<SPC> q") 'my/evil-quit
+  (kbd "<SPC> t t") 'eyebrowse-create-window-config
+  (kbd "<SPC> `") 'eyebrowse-last-window-config
+  (kbd "<SPC> w") 'evil-write
+  (kbd "<SPC> f n") (lambda () (interactive) (message (buffer-file-name)))
+  (kbd "<SPC> f m") 'delete-trailing-whitespace
+  (kbd "<SPC> s w") 'toggle-truncate-lines
+  (kbd "<SPC> t i") 'electric-indent-local-mode
+  (kbd "<SPC> i c") 'my/toggle-evil-ex-search-case)
 (evil-define-key 'visual 'global
-  (kbd ", J") 'evil-join)
+  (kbd "<SPC> J") 'evil-join)
 
 ; esc and C-q to quit everything.
 (defun minibuffer-keyboard-quit ()
@@ -228,8 +227,8 @@
 (evil-define-key 'insert 'global (kbd "M-/") (lambda () (interactive) (my/break-undo 'comment-dwim)))
 ; TODO: evilnc text object doesn't understand coqdoc comment (** *) because comment-start includes a space..
 (evil-define-key '(normal visual) 'global
-  (kbd ", c <SPC>") 'evilnc-comment-or-uncomment-lines
-  (kbd ", c c") 'evilnc-copy-and-comment-lines)
+  (kbd "<SPC> c <SPC>") 'evilnc-comment-or-uncomment-lines
+  (kbd "<SPC> c c") 'evilnc-copy-and-comment-lines)
 (define-key evil-inner-text-objects-map evilnc-comment-text-object 'evilnc-inner-commenter)
 (define-key evil-outer-text-objects-map evilnc-comment-text-object 'evilnc-outer-commenter)
 
@@ -261,7 +260,7 @@
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
 (diminish 'evil-snipe-local-mode)
-; Use "," exclusively as leader, and use "M-;" for reverse repeat only for motion states.
+; Use "," as a secondary leader, and use "M-;" for reverse repeat only for motion states.
 ; In other states, keep the default mapping M-; to comment-dwim.
 (evil-define-key 'motion evil-snipe-override-local-mode-map
   (kbd ",") nil
@@ -273,12 +272,12 @@
 (add-to-list 'load-path "~/.emacs.d/submodules/evil-easymotion")
 (require 'evil-easymotion)
 ; TODO: enter label mode automatically, and make "," and "M-;" keep working
-(define-key evil-snipe-parent-transient-map (kbd ", ;")
+(define-key evil-snipe-parent-transient-map (kbd "<SPC> ;")
   (evilem-create 'evil-snipe-repeat
                  :bind ((evil-snipe-scope 'buffer)
                         (evil-snipe-enable-highlight)
                         (evil-snipe-enable-incremental-highlight))))
-(define-key evil-snipe-parent-transient-map (kbd ", M-;")
+(define-key evil-snipe-parent-transient-map (kbd "<SPC> M-;")
   (evilem-create 'evil-snipe-repeat-reverse
                  :bind ((evil-snipe-scope 'buffer)
                         (evil-snipe-enable-highlight)
@@ -744,8 +743,8 @@ This modified version does not mark the empty line if CCS is whitespace."
   (setq neo-theme 'nerd)
   :config
   (evil-define-key 'normal 'global
-    (kbd ", n n") 'neotree-toggle
-    (kbd ", n h") 'neotree-hidden-file-toggle))
+    (kbd "<SPC> n n") 'neotree-toggle
+    (kbd "<SPC> n h") 'neotree-hidden-file-toggle))
 
 ; https://leanpub.com/markdown-mode/read
 (use-package markdown-mode :ensure t
@@ -845,7 +844,7 @@ everywhere else."
     (setq-local scroll-margin 0))
   (defadvice fzf/start (after normalize-fzf-mode-line activate)
     (setq mode-line-format nil))
-    (evil-define-key 'normal 'global (kbd ", G") 'fzf-ripgrep))
+    (evil-define-key 'normal 'global (kbd "<SPC> G") 'fzf-ripgrep))
 
 ; M-i to insert current entry M-o: ivy-dispatching-done
 (use-package ivy :ensure t :diminish
@@ -884,9 +883,9 @@ everywhere else."
 
 (evil-define-key 'normal 'global
   (kbd "C-f") 'counsel-fzf
-  (kbd ", e") 'counsel-find-file ; <BS> deletes each node
-  (kbd ", b") 'ivy-switch-buffer
-  (kbd ", h h") 'counsel-recentf)
+  (kbd "<SPC> e") 'counsel-find-file ; <BS> deletes each node
+  (kbd "<SPC> b") 'ivy-switch-buffer
+  (kbd "<SPC> h h") 'counsel-recentf)
 
 (use-package magit :ensure t)
 
