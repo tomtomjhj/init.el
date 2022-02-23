@@ -49,3 +49,7 @@ x
   Definition a := (* asdf. *) 1.
   ```
 * take stuff from https://github.com/hlissner/doom-emacs/tree/develop/modules/editor/evil
+* https://karthinks.com/software/batteries-included-with-emacs/
+  https://karthinks.com/software/more-batteries-included-with-emacs/
+  https://karthinks.com/software/latex-input-for-impatient-scholars/
+  https://karthinks.com/software/avy-can-do-anything/

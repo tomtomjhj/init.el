@@ -318,6 +318,8 @@
   (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
   (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
   (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
+  (global-set-key [remap xref-go-back] #'better-jumper-jump-backward)
+  (global-set-key [remap xref-go-forward] #'better-jumper-jump-forward)
   :config
   (better-jumper-mode +1)
 
@@ -697,7 +699,7 @@ This modified version does not mark the empty line if CCS is whitespace."
 
 (setq-default proof-three-window-mode-policy 'smart)
 
-(setq coq-compile-before-require t)
+(setq coq-compile-before-require nil)
 
 (setq coq-smie-user-tokens
       '(("∗" . "*")
