@@ -702,16 +702,27 @@ This modified version does not mark the empty line if CCS is whitespace."
 (setq coq-compile-before-require nil)
 
 (setq coq-smie-user-tokens
-      '(("∗" . "*")
+      '(("," . ":=")
+        ("∗" . "->")
         ("-∗" . "->")
-        ("∗-∗" . "<->")
+        ("∗-∗" . "->")
         ("==∗" . "->")
+        ("=∗" . "->") ;; Hack to match ={E1,E2}=∗
+        ("|==>" . ":=")
         ("⊢" . "->")
-        ("⊣⊢" . "<->")
-        ("⋅" . "*")
+        ("⊣⊢" . "->")
+        ("↔" . "->")
+        ("←" . "<-")
+        ("→" . "->")
+        ("=" . "->")
+        ("==" . "->")
+        ("/\\" . "->")
+        ("⋅" . "->")
         (":>" . ":=")
         ("by" . "now")
-        ("forall" . "now")))
+        ("forall" . "now") ;; NB: this breaks current ∀ indentation.
+        ))
+
 
 (setq company-coq-disabled-features '(hello smart-subscripts spinner)
       company-coq-features/prettify-symbols-in-terminals t)
