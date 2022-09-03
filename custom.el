@@ -7,23 +7,20 @@
  '(blink-cursor-mode nil)
  '(counsel-find-file-ignore-regexp
    "\\(?:\\.\\(?:aux\\|b\\(?:bl\\|in\\|lg\\|zr/\\)\\|c\\(?:lass\\|ps?\\)\\|d\\(?:\\(?:64fs\\|fs\\|x\\(?:\\(?:32\\|64\\)fs\\)?\\)l\\)\\|elc\\|f\\(?:asl?\\|mt\\|ns?\\|\\(?:x\\(?:\\(?:32\\|64\\)f\\)\\)?sl\\)\\|g\\(?:it/\\|lob?\\|mo\\)\\|hg/\\|idx\\|kys?\\|l\\(?:bin\\|ib\\|o[ft]\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\|[ano]\\)\\|m\\(?:em\\|o\\)\\|p\\(?:64fsl\\|fsl\\|gs?\\|h[io]\\|y[co]\\)\\|s\\(?:o\\|parcf\\|vn/\\|x\\(?:\\(?:32\\|64\\)fsl\\)\\)\\|t\\(?:fm\\|oc\\|ps?\\)\\|ufsl\\|v\\(?:rs\\|[or]\\)\\|wx\\(?:\\(?:32\\|64\\)fsl\\)\\|x86f\\|[ao]\\)\\|CVS/\\|_\\(?:\\(?:MTN\\|darcs\\)/\\)\\|~\\)")
- '(evil-goto-definition-functions (quote (evil-goto-definition-search)))
+ '(evil-goto-definition-functions '(evil-goto-definition-search))
  '(hl-todo-keyword-faces
-   (quote
-    (("TODO" . "#ffafd7")
+   '(("TODO" . "#ffafd7")
      ("NOTE" . "#ffafd7")
      ("HACK" . "#ffafd7")
      ("FIXME" . "#ffafd7")
-     ("XXX+" . "#ffafd7"))))
+     ("XXX+" . "#ffafd7")))
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(package-selected-packages
-   (quote
-    (zenburn-theme undo-tree better-jumper vimish-fold avy xclip projectile diminish eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general)))
+   '(ivy zenburn-theme undo-tree better-jumper vimish-fold avy xclip projectile diminish eyebrowse neotree magit yasnippet company counsel hl-todo editorconfig annalist syntax-subword markdown-mode use-package rainbow-delimiters company-coq proof-general))
  '(proof-splash-enable nil)
  '(proof-universal-keys
-   (quote
-    (([(control c)
+   '(([(control c)
        96]
       . proof-next-error)
      ([(control c)
@@ -63,14 +60,13 @@
        (control o)]
       . proof-display-some-buffers)
      ([(control shift mouse-1)]
-      . pg-identifier-under-mouse-query))))
+      . pg-identifier-under-mouse-query)))
  '(safe-local-variable-values
-   (quote
-    ((eval setq coq-prog-name
+   '((eval setq coq-prog-name
            (expand-file-name
             (concat
              (locate-dominating-file buffer-file-name ".dir-locals.el")
-             "_opam/bin/coqtop"))))))
+             "_opam/bin/coqtop")))))
  '(show-paren-mode t)
  '(word-wrap t)
  '(xterm-mouse-mode t))
