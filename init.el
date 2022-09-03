@@ -420,14 +420,14 @@ evil-define-key is very weird. dolist didn't work: https://emacs.stackexchange.c
   (kbd "C-r") 'my/coq-redo
   ; folding: S-tab, C-c C-/, C-c C-\ (repeat to hide/show all)
   (kbd "C-c C-_") 'company-coq-fold ; C-/ is C-_ in terminal
-  (kbd "M-l") 'company-coq-proof-goto-point
-  (kbd "C-M-l") 'company-coq-proof-goto-point
+  (kbd "M-l") 'proof-goto-point
+  (kbd "C-M-l") 'proof-goto-point
   (kbd "C-w M-]") (lambda () (interactive) (evil-window-split) (company-coq-jump-to-definition (company-coq-symbol-at-point-with-error))))
 (evil-define-key 'insert coq-mode-map
-  (kbd "M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
+  (kbd "M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command))
-  (kbd "C-M-l") (lambda () (interactive) (my/break-undo 'company-coq-proof-goto-point))
+  (kbd "C-M-l") (lambda () (interactive) (my/break-undo 'proof-goto-point))
   (kbd "C-M-k") (lambda () (interactive) (my/break-undo 'proof-undo-last-successful-command))
   (kbd "C-M-j") (lambda () (interactive) (my/break-undo 'my/proof-assert-next-command)))
 ; Indentation mappings
@@ -695,7 +695,7 @@ This modified version does not mark the empty line if CCS is whitespace."
 ; don't repeat proof stuff with `.`.
 (evil-declare-not-repeat #'my/proof-assert-next-command)
 (evil-declare-not-repeat #'proof-undo-last-successful-command)
-(evil-declare-not-repeat #'company-coq-proof-goto-point)
+(evil-declare-not-repeat #'proof-goto-point)
 
 (setq-default proof-three-window-mode-policy 'smart)
 
